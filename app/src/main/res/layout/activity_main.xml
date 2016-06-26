@@ -142,6 +142,26 @@
             android:layout_gravity="center_horizontal|top"
             android:textStyle="bold"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="TxPower"
+            android:id="@+id/txPowerLayout"
+            android:layout_gravity="left|top"
+            android:layout_marginTop="250dp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="TxPower"
+            android:id="@+id/TxPower"
+            android:layout_gravity="right|top"
+            android:layout_marginTop="250dp"
+            android:layout_marginRight="10dp"/>
+
 
     </FrameLayout>
 

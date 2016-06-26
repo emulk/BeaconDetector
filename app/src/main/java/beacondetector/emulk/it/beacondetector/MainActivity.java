@@ -45,25 +45,12 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
      */
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
-    /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     */
-    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            if (AUTO_HIDE) {
-                delayedHide(AUTO_HIDE_DELAY_MILLIS);
-            }
-            return false;
-        }
-    };
     private String BeaconName = null;
     private String namespaceId = null;
     private String instanceId = null;
     private String distanceString = null;
     private String RSSIString = null;
+    private String mTxPower = null;
     private double distance = 0;
     private int Rssi = 0;
     private BeaconManager mBeaconManager;
@@ -104,6 +91,20 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
             hide();
         }
     };
+    /**
+     * Touch listener to use for in-layout UI controls to delay hiding the
+     * system UI. This is to prevent the jarring behavior of controls going away
+     * while interacting with activity UI.
+     */
+    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            if (AUTO_HIDE) {
+                delayedHide(AUTO_HIDE_DELAY_MILLIS);
+            }
+            return false;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,6 +133,18 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
                 toggle();
             }
         });
+
+        mBeaconManager = BeaconManager.getInstanceForApplication(this.getApplicationContext());
+        // Detect the main Eddystone-UID frame:
+        mBeaconManager.getBeaconParsers().add(new BeaconParser().
+                setBeaconLayout("s:0-1=feaa,m:2-2=00,p:3-3:-41,i:4-13,i:14-19"));
+        // Detect the telemetry (TLM) frame:
+        mBeaconManager.getBeaconParsers().add(new BeaconParser().
+                setBeaconLayout("x,s:0-1=feaa,m:2-2=20,d:3-3,d:4-5,d:6-7,d:8-11,d:12-15"));
+        // Detect the URL frame:
+        mBeaconManager.getBeaconParsers().add(new BeaconParser().
+                setBeaconLayout("s:0-1=feaa,m:2-2=10,p:3-3:-41,i:4-21v"));
+        mBeaconManager.bind(this);
 
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
@@ -200,11 +213,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
     @Override
     public void onResume() {
         super.onResume();
-        mBeaconManager = BeaconManager.getInstanceForApplication(this.getApplicationContext());
-        // Detect the main Eddystone-UID frame:
-        mBeaconManager.getBeaconParsers().add(new BeaconParser().
-                setBeaconLayout("s:0-1=feaa,m:2-2=00,p:3-3:-41,i:4-13,i:14-19"));
-        mBeaconManager.bind(this);
+
     }
 
     @Override
@@ -231,10 +240,12 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
                 namespaceId = namespaceIdTMP.toString().substring(2);
                 instanceId = instanceIdTMP.toString().substring(2);
                 distance = beacon.getDistance();
-                distanceString= distance+"m";
-                distanceString = distanceString.substring(0, 4)+"m";
-                 Rssi = beacon.getRssi();
-                RSSIString = Rssi+"";
+                distanceString = distance + "m";
+                distanceString = distanceString.substring(0, 4) + "m";
+                Rssi = beacon.getRssi();
+                RSSIString = Rssi + "";
+
+                mTxPower = beacon.getTxPower() + "";
 
                 Log.d(TAG, RSSIString);
 
@@ -246,11 +257,12 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
 
 
                         try {
-                            ((TextView) MainActivity.this.findViewById(R.id.nameBeacon)).setText( BeaconName);
-                            ((TextView) MainActivity.this.findViewById(R.id.namespaceID)).setText( namespaceId);
-                            ((TextView) MainActivity.this.findViewById(R.id.instanceID)).setText( instanceId);
-                            ((TextView) MainActivity.this.findViewById(R.id.beaconDistance)).setText( distanceString );
+                            ((TextView) MainActivity.this.findViewById(R.id.nameBeacon)).setText(BeaconName);
+                            ((TextView) MainActivity.this.findViewById(R.id.namespaceID)).setText(namespaceId);
+                            ((TextView) MainActivity.this.findViewById(R.id.instanceID)).setText(instanceId);
+                            ((TextView) MainActivity.this.findViewById(R.id.beaconDistance)).setText(distanceString);
                             ((TextView) MainActivity.this.findViewById(R.id.rssiView)).setText(RSSIString);
+                            ((TextView) MainActivity.this.findViewById(R.id.TxPower)).setText(mTxPower);
                         } catch (Exception e) {
                             Log.d(TAG, e.getMessage());
                         }
@@ -258,6 +270,22 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
 
                     }
                 });
+
+                // Do we have telemetry data?
+                if (beacon.getExtraDataFields().size() > 0) {
+                    long telemetryVersion = beacon.getExtraDataFields().get(0);
+                    long batteryMilliVolts = beacon.getExtraDataFields().get(1);
+                    long pduCount = beacon.getExtraDataFields().get(3);
+                    long uptime = beacon.getExtraDataFields().get(4);
+
+                    Log.d(TAG, "Telemetry Data");
+
+                    Log.d(TAG, "The above beacon is sending telemetry version " + telemetryVersion +
+                            ", has been up for : " + uptime + " seconds" +
+                            ", has a battery level of " + batteryMilliVolts + " mV" +
+                            ", and has transmitted " + pduCount + " advertisements.");
+
+                }
             }
         }
     }
@@ -271,6 +299,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
     protected void onDestroy() {
         super.onDestroy();
         //qualcosa alla distruzione del gioco
+        mBeaconManager.unbind(this);
     }
 
 
