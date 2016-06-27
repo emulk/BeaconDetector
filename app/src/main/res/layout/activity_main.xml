@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:background="#C1E8F7"
     tools:context="beacondetector.emulk.it.beacondetector.MainActivity">
 
@@ -137,7 +138,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="BeaconDetector"
+            android:text="Eddyston Beacon"
             android:id="@+id/AppName"
             android:layout_gravity="center_horizontal|top"
             android:textStyle="bold"/>
@@ -161,6 +162,36 @@
             android:layout_gravity="right|top"
             android:layout_marginTop="250dp"
             android:layout_marginRight="10dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Telemetry Data:"
+            android:id="@+id/telemetryLayout"
+            android:layout_gravity="left|top"
+            android:layout_marginTop="300dp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="TelemetryData"
+            android:id="@+id/telemetryData"
+            android:layout_gravity="right|top"
+            android:layout_marginTop="300dp"
+            android:layout_marginRight="10dp"/>
+
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            ads:adSize="BANNER"
+            ads:adUnitId="@string/banner_ad_unit_id">
+        </com.google.android.gms.ads.AdView>
 
 
     </FrameLayout>

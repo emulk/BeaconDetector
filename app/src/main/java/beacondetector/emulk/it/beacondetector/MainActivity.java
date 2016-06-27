@@ -13,6 +13,12 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
 import org.altbeacon.beacon.BeaconManager;
@@ -20,6 +26,7 @@ import org.altbeacon.beacon.BeaconParser;
 import org.altbeacon.beacon.Identifier;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
+import org.altbeacon.beacon.utils.UrlBeaconUrlCompressor;
 
 import java.util.Collection;
 
@@ -45,12 +52,14 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
      */
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
+    private Tracker mTracker;
     private String BeaconName = null;
     private String namespaceId = null;
     private String instanceId = null;
     private String distanceString = null;
     private String RSSIString = null;
     private String mTxPower = null;
+    private String telemetryData = null;
     private double distance = 0;
     private int Rssi = 0;
     private BeaconManager mBeaconManager;
@@ -111,6 +120,17 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+
+        //[[Google Analytics ]]
+        // Obtain the shared Tracker instance.
+        AnalyticsApplication application = (AnalyticsApplication) getApplication();
+        mTracker = application.getDefaultTracker();
+        //[[Endo Google Analytics
+
+        MobileAds.initialize(getApplicationContext(), "ca-app-pub-4209540176643828~5779959391");
+        AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
 
         //se il bluetooth non è attivo, lo attivo
@@ -214,6 +234,12 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
     public void onResume() {
         super.onResume();
 
+        String name = "MainActivity";
+        Log.i(TAG, "Setting screen name: " + name);
+        mTracker.setScreenName("Image~" + name);
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+
+
     }
 
     @Override
@@ -234,6 +260,25 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
                 // This is a Eddystone-UID frame
                 Identifier namespaceIdTMP = beacon.getId1();
 
+                // Do we have telemetry data?
+                if (beacon.getExtraDataFields().size() > 0) {
+                    long telemetryVersion = beacon.getExtraDataFields().get(0);
+                    long batteryMilliVolts = beacon.getExtraDataFields().get(1);
+                    long pduCount = beacon.getExtraDataFields().get(3);
+                    long uptime = beacon.getExtraDataFields().get(4);
+
+                    Log.d(TAG, "Telemetry Data");
+
+                    Log.d(TAG, "The above beacon is sending telemetry version " + telemetryVersion +
+                            ", has been up for : " + uptime + " seconds" +
+                            ", has a battery level of " + batteryMilliVolts + " mV" +
+                            ", and has transmitted " + pduCount + " advertisements.");
+                    telemetryData = "Si";
+
+                } else {
+                    telemetryData = "No";
+                }
+
 
                 final Identifier instanceIdTMP = beacon.getId2();
                 BeaconName = beacon.getBluetoothName();
@@ -241,11 +286,11 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
                 instanceId = instanceIdTMP.toString().substring(2);
                 distance = beacon.getDistance();
                 distanceString = distance + "m";
-                distanceString = distanceString.substring(0, 4) + "m";
+                distanceString = distanceString.substring(0, 4) + " m";
                 Rssi = beacon.getRssi();
-                RSSIString = Rssi + "";
+                RSSIString = Rssi + " dBm";
 
-                mTxPower = beacon.getTxPower() + "";
+                mTxPower = beacon.getTxPower() + " dBm";
 
                 Log.d(TAG, RSSIString);
 
@@ -263,6 +308,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
                             ((TextView) MainActivity.this.findViewById(R.id.beaconDistance)).setText(distanceString);
                             ((TextView) MainActivity.this.findViewById(R.id.rssiView)).setText(RSSIString);
                             ((TextView) MainActivity.this.findViewById(R.id.TxPower)).setText(mTxPower);
+                            ((TextView) MainActivity.this.findViewById(R.id.telemetryData)).setText(telemetryData);
                         } catch (Exception e) {
                             Log.d(TAG, e.getMessage());
                         }
@@ -271,21 +317,14 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
                     }
                 });
 
-                // Do we have telemetry data?
-                if (beacon.getExtraDataFields().size() > 0) {
-                    long telemetryVersion = beacon.getExtraDataFields().get(0);
-                    long batteryMilliVolts = beacon.getExtraDataFields().get(1);
-                    long pduCount = beacon.getExtraDataFields().get(3);
-                    long uptime = beacon.getExtraDataFields().get(4);
 
-                    Log.d(TAG, "Telemetry Data");
+            }
 
-                    Log.d(TAG, "The above beacon is sending telemetry version " + telemetryVersion +
-                            ", has been up for : " + uptime + " seconds" +
-                            ", has a battery level of " + batteryMilliVolts + " mV" +
-                            ", and has transmitted " + pduCount + " advertisements.");
-
-                }
+            if (beacon.getServiceUuid() == 0xfeaa && beacon.getBeaconTypeCode() == 0x10) {
+                // This is a Eddystone-URL frame
+                String url = UrlBeaconUrlCompressor.uncompress(beacon.getId1().toByteArray());
+                Log.d(TAG, "I see a beacon transmitting a url: " + url +
+                        " approximately " + beacon.getDistance() + " meters away.");
             }
         }
     }
@@ -293,6 +332,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
     @Override
     public void onStop() {
         super.onStop();
+        mBeaconManager.unbind(this);
     }
 
     @Override
