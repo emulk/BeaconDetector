@@ -183,17 +183,37 @@
             android:layout_marginTop="300dp"
             android:layout_marginRight="10dp"/>
 
-        <com.google.android.gms.ads.AdView
-            android:id="@+id/adView"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
-            ads:adSize="BANNER"
-            ads:adUnitId="@string/banner_ad_unit_id">
-        </com.google.android.gms.ads.AdView>
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Url"
+            android:id="@+id/urlView"
+            android:layout_gravity="left|top"
+            android:layout_marginTop="350dp"
+            android:textStyle="bold"/>
+
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="url"
+            android:id="@+id/urlId"
+            android:layout_gravity="right|top"
+            android:layout_marginTop="350dp" />
 
 
     </FrameLayout>
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_ad_unit_id"
+        android:layout_gravity="center_horizontal|bottom">
+    </com.google.android.gms.ads.AdView>
 
 </FrameLayout>

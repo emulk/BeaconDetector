@@ -2,6 +2,8 @@ package beacondetector.emulk.it.beacondetector;
 
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.RemoteException;
@@ -10,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,6 +55,20 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
      */
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
+    /**
+     * Touch listener to use for in-layout UI controls to delay hiding the
+     * system UI. This is to prevent the jarring behavior of controls going away
+     * while interacting with activity UI.
+     */
+    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            if (AUTO_HIDE) {
+                delayedHide(AUTO_HIDE_DELAY_MILLIS);
+            }
+            return false;
+        }
+    };
     private Tracker mTracker;
     private String BeaconName = null;
     private String namespaceId = null;
@@ -60,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
     private String RSSIString = null;
     private String mTxPower = null;
     private String telemetryData = null;
+    private String url = null;
     private double distance = 0;
     private int Rssi = 0;
     private BeaconManager mBeaconManager;
@@ -98,20 +116,6 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
         @Override
         public void run() {
             hide();
-        }
-    };
-    /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     */
-    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            if (AUTO_HIDE) {
-                delayedHide(AUTO_HIDE_DELAY_MILLIS);
-            }
-            return false;
         }
     };
 
@@ -299,8 +303,6 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
                         " approximately " + beacon.getDistance() + " meters away.");
                 runOnUiThread(new Runnable() {
                     public void run() {
-
-
                         try {
                             ((TextView) MainActivity.this.findViewById(R.id.nameBeacon)).setText(BeaconName);
                             ((TextView) MainActivity.this.findViewById(R.id.namespaceID)).setText(namespaceId);
@@ -322,9 +324,21 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
 
             if (beacon.getServiceUuid() == 0xfeaa && beacon.getBeaconTypeCode() == 0x10) {
                 // This is a Eddystone-URL frame
-                String url = UrlBeaconUrlCompressor.uncompress(beacon.getId1().toByteArray());
+                url = UrlBeaconUrlCompressor.uncompress(beacon.getId1().toByteArray());
                 Log.d(TAG, "I see a beacon transmitting a url: " + url +
                         " approximately " + beacon.getDistance() + " meters away.");
+
+
+                Button urlButton = (Button) findViewById(R.id.urlId);
+                urlButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Intent urlIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                        startActivity(urlIntent);
+                    }
+                });
+
             }
         }
     }
