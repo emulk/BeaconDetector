@@ -29,7 +29,7 @@
 
 
         <TextView
-            android:id="@+id/beaconLaout"
+            android:id="@+id/beaconLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left|top"
@@ -56,13 +56,13 @@
             android:layout_height="wrap_content"
             android:layout_gravity="right|top"
             android:layout_marginTop="62dp"
-            android:textSize="18dp"
+            android:textSize="14dp"
             android:layout_marginRight="10dp"
             android:text="Namespace"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <TextView
-            android:id="@+id/namespaceLaout"
+            android:id="@+id/namespaceLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left|top"
@@ -73,7 +73,7 @@
 
 
         <TextView
-            android:id="@+id/instanceLaout"
+            android:id="@+id/instanceLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left|top"
@@ -115,7 +115,7 @@
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <TextView
-            android:id="@+id/RssiLawyout"
+            android:id="@+id/rssiLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
@@ -188,19 +188,23 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Url"
-            android:id="@+id/urlView"
+            android:id="@+id/urlLayout"
             android:layout_gravity="left|top"
             android:layout_marginTop="350dp"
             android:textStyle="bold"/>
 
-
-        <Button
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="url"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="EddystonUrl"
             android:id="@+id/urlId"
             android:layout_gravity="right|top"
-            android:layout_marginTop="350dp" />
+            android:layout_marginTop="350dp"
+            android:clickable="true"
+            android:onClick="onClick"
+            android:layout_marginRight="10dp"
+            />
 
 
     </FrameLayout>

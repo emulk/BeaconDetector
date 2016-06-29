@@ -12,7 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +20,9 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
@@ -69,15 +71,21 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
             return false;
         }
     };
+    TextView urlLink;
     private Tracker mTracker;
     private String BeaconName = null;
     private String namespaceId = null;
     private String instanceId = null;
+    //iBeacon
+    private String BeaconMajor = null;
+    private String BeaconMinor = null;
+    private String BeaconUUID = null;
     private String distanceString = null;
     private String RSSIString = null;
     private String mTxPower = null;
     private String telemetryData = null;
     private String url = null;
+    private String urlDescription = null;
     private double distance = 0;
     private int Rssi = 0;
     private BeaconManager mBeaconManager;
@@ -118,6 +126,11 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
             hide();
         }
     };
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,6 +181,9 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
         // Detect the URL frame:
         mBeaconManager.getBeaconParsers().add(new BeaconParser().
                 setBeaconLayout("s:0-1=feaa,m:2-2=10,p:3-3:-41,i:4-21v"));
+
+        mBeaconManager.getBeaconParsers().add(new BeaconParser().
+                setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
         mBeaconManager.bind(this);
 
         // Upon interacting with UI controls, delay any scheduled hide()
@@ -177,6 +193,9 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
 
 
         //((TextView)MainActivity.this.findViewById(R.id.beaconDistance)).setText(distance);
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
@@ -235,18 +254,6 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
 
 
     @Override
-    public void onResume() {
-        super.onResume();
-
-        String name = "MainActivity";
-        Log.i(TAG, "Setting screen name: " + name);
-        mTracker.setScreenName("Image~" + name);
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
-
-
-    }
-
-    @Override
     public void onBeaconServiceConnect() {
         Region region = new Region("all-beacons-region", null, null, null);
         try {
@@ -260,6 +267,8 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
     @Override
     public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
         for (Beacon beacon : beacons) {
+            Log.d("Beacon Service Uuid", beacon.getServiceUuid() + " uuid");
+            Log.d("Beacon Type Code", beacon.getBeaconTypeCode() + " type");
             if (beacon.getServiceUuid() == 0xfeaa && beacon.getBeaconTypeCode() == 0x00) {
                 // This is a Eddystone-UID frame
                 Identifier namespaceIdTMP = beacon.getId1();
@@ -320,33 +329,185 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
                 });
 
 
-            }
-
-            if (beacon.getServiceUuid() == 0xfeaa && beacon.getBeaconTypeCode() == 0x10) {
+            } else if (beacon.getServiceUuid() == 0xfeaa && beacon.getBeaconTypeCode() == 0x10) {
                 // This is a Eddystone-URL frame
                 url = UrlBeaconUrlCompressor.uncompress(beacon.getId1().toByteArray());
+                urlDescription = url;
+                if (!url.startsWith("http://") && !url.startsWith("https://")) {
+                    url = "http://" + url;
+                }
                 Log.d(TAG, "I see a beacon transmitting a url: " + url +
                         " approximately " + beacon.getDistance() + " meters away.");
 
 
-                Button urlButton = (Button) findViewById(R.id.urlId);
-                urlButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                urlLink = (TextView) findViewById(R.id.urlId);
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        try {
+                            ((TextView) MainActivity.this.findViewById(R.id.AppName)).setText("Eddystone URL");
+                            ((TextView) MainActivity.this.findViewById(R.id.urlId)).setText(urlDescription);
+                            urlLink.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
 
-                        Intent urlIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                        startActivity(urlIntent);
+                                    Intent urlIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                                    startActivity(urlIntent);
+                                }
+                            });
+                        } catch (Exception e) {
+                            Log.d(TAG, e.getMessage());
+                        }
+                    }
+                });
+
+            } else if (beacon.getServiceUuid() != 0 && beacon.getBeaconTypeCode() == 533) {
+                //bluetoothName emulkBeacon bluetoothAdress DE:F0:70:9E:E9:B8 datafields []
+                // ExtraDataFiels[] id1 ebefd083-70a2-47c8-9837-e7b5634df524 id2 10 id3 1 manufacter 76
+                Log.d(TAG, "Ho appena visto un iBeacon");
+                Log.d(TAG, "bluetoothName " + beacon.getBluetoothName() + " bluetoothAdress " + beacon.getBluetoothAddress()
+                        + " datafields " + beacon.getDataFields() + " ExtraDataFiels" + beacon.getExtraDataFields() + " id1 " + beacon.getId1()
+                        + " id2 " + beacon.getId2() + " id3 " + beacon.getId3() + " manufacter " + beacon.getManufacturer());
+
+                BeaconName = beacon.getBluetoothName();
+                BeaconUUID = (beacon.getId1() + "").toUpperCase();
+                BeaconMajor = beacon.getId2() + "";
+                BeaconMinor = beacon.getId3() + "";
+                BeaconMajor = BeaconMajor + " / " + BeaconMinor;
+                distance = beacon.getDistance();
+                distanceString = distance + "m";
+                distanceString = distanceString.substring(0, 4) + " m";
+                Rssi = beacon.getRssi();
+                RSSIString = Rssi + " dBm";
+
+                mTxPower = beacon.getTxPower() + " dBm";
+                telemetryData="No";
+
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        try {
+
+                            ((TextView) MainActivity.this.findViewById(R.id.AppName)).setText("iBeacon");
+                            ((TextView) MainActivity.this.findViewById(R.id.beaconLayout)).setText("Beacon Name");
+                            ((TextView) MainActivity.this.findViewById(R.id.namespaceLayout)).setText("UUID");
+                            ((TextView) MainActivity.this.findViewById(R.id.instanceLayout)).setText("Major/Minor");
+                            (MainActivity.this.findViewById(R.id.urlLayout)).setVisibility(View.INVISIBLE);
+
+
+                            ((TextView) MainActivity.this.findViewById(R.id.nameBeacon)).setText(BeaconName);
+                            ((TextView) MainActivity.this.findViewById(R.id.namespaceID)).setText(BeaconUUID);
+                            ((TextView) MainActivity.this.findViewById(R.id.instanceID)).setText(BeaconMajor);
+                            ((TextView) MainActivity.this.findViewById(R.id.beaconDistance)).setText(distanceString);
+                            ((TextView) MainActivity.this.findViewById(R.id.rssiView)).setText(RSSIString);
+                            ((TextView) MainActivity.this.findViewById(R.id.TxPower)).setText(mTxPower);
+                            ((TextView) MainActivity.this.findViewById(R.id.telemetryData)).setText(telemetryData);
+                            (MainActivity.this.findViewById(R.id.urlId)).setVisibility(View.INVISIBLE);
+
+
+                        } catch (Exception e) {
+                            Log.d(TAG, e.getMessage());
+                        }
+
+
+                    }
+                });
+
+            } else {
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        try {
+                            //se non ho le caratteristiche di eddystone setto tutti i campi invisibili
+                            ((TextView) MainActivity.this.findViewById(R.id.beaconLayout)).setVisibility(View.INVISIBLE);
+                            ((TextView) MainActivity.this.findViewById(R.id.namespaceLayout)).setVisibility(View.INVISIBLE);
+                            ((TextView) MainActivity.this.findViewById(R.id.instanceLayout)).setVisibility(View.INVISIBLE);
+                            ((TextView) MainActivity.this.findViewById(R.id.distanceLayout)).setVisibility(View.INVISIBLE);
+                            ((TextView) MainActivity.this.findViewById(R.id.rssiLayout)).setVisibility(View.INVISIBLE);
+                            ((TextView) MainActivity.this.findViewById(R.id.txPowerLayout)).setVisibility(View.INVISIBLE);
+                            ((TextView) MainActivity.this.findViewById(R.id.telemetryLayout)).setVisibility(View.INVISIBLE);
+
+
+                            ((TextView) MainActivity.this.findViewById(R.id.nameBeacon)).setVisibility(View.INVISIBLE);
+                            ((TextView) MainActivity.this.findViewById(R.id.namespaceID)).setVisibility(View.INVISIBLE);
+                            ((TextView) MainActivity.this.findViewById(R.id.instanceID)).setVisibility(View.INVISIBLE);
+                            ((TextView) MainActivity.this.findViewById(R.id.beaconDistance)).setVisibility(View.INVISIBLE);
+                            ((TextView) MainActivity.this.findViewById(R.id.rssiView)).setVisibility(View.INVISIBLE);
+                            ((TextView) MainActivity.this.findViewById(R.id.TxPower)).setVisibility(View.INVISIBLE);
+                            ((TextView) MainActivity.this.findViewById(R.id.telemetryData)).setVisibility(View.INVISIBLE);
+                        } catch (Exception e) {
+                            Log.d(TAG, e.getMessage());
+                        }
                     }
                 });
 
             }
+
+        }
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Main Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app URL is correct.
+                Uri.parse("android-app://beacondetector.emulk.it.beacondetector/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        String name = "MainActivity";
+        Log.i(TAG, "Setting screen name: " + name);
+        mTracker.setScreenName("Image~" + name);
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+
+        if (mBeaconManager.isBound(this)) {
+            mBeaconManager.setBackgroundMode(false);
+        }
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mBeaconManager.isBound(this)) {
+            mBeaconManager.setBackgroundMode(true);
         }
     }
 
     @Override
     public void onStop() {
         super.onStop();
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Main Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app URL is correct.
+                Uri.parse("android-app://beacondetector.emulk.it.beacondetector/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
         mBeaconManager.unbind(this);
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.disconnect();
     }
 
     @Override
