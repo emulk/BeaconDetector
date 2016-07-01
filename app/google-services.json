@@ -1,39 +1,94 @@
 {
   "project_info": {
-    "project_number": "586166674163",
-    "firebase_url": "https://beacon-detector.firebaseio.com",
-    "project_id": "beacon-detector",
-    "storage_bucket": "beacon-detector.appspot.com"
+    "project_number": "851142192293",
+    "firebase_url": "https://admob-app-id-2496492990.firebaseio.com",
+    "project_id": "admob-app-id-2496492990",
+    "storage_bucket": "admob-app-id-2496492990.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:586166674163:android:44098d00c0e3ad96",
+        "mobilesdk_app_id": "1:851142192293:android:3f09ef6dba2f2d82",
+        "android_client_info": {
+          "package_name": "it.emulk.quizcuriosity"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "851142192293-n4ri5grfvvp4k7qo192iu94ncrj3vq5m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4rrkcoDPR1vbGlILDLl1kzdz6mXhmgVQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:851142192293:android:5e7f773873488904",
+        "android_client_info": {
+          "package_name": "it.example.storygame"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "851142192293-n4ri5grfvvp4k7qo192iu94ncrj3vq5m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4rrkcoDPR1vbGlILDLl1kzdz6mXhmgVQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:851142192293:android:44098d00c0e3ad96",
         "android_client_info": {
           "package_name": "beacondetector.emulk.it.beacondetector"
         }
       },
       "oauth_client": [
         {
-          "client_id": "586166674163-briutucrtm101he9icoc978984lcteve.apps.googleusercontent.com",
-          "client_type": 3
-        },
-        {
-          "client_id": "586166674163-tpl27b6lj434vneu49h13hc5am692v54.apps.googleusercontent.com",
+          "client_id": "851142192293-n4ri5grfvvp4k7qo192iu94ncrj3vq5m.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAIEqQaCEXAm6P0PRqUp-Wh3oOaH3DwZA8"
+          "current_key": "AIzaSyA4rrkcoDPR1vbGlILDLl1kzdz6mXhmgVQ"
         }
       ],
       "services": {
         "analytics_service": {
-          "status": 2,
-          "analytics_property": {
-            "tracking_id": "UA-79934603-1"
-          }
+          "status": 1
         },
         "appinvite_service": {
           "status": 1,

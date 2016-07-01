@@ -33,6 +33,7 @@ import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
 import org.altbeacon.beacon.utils.UrlBeaconUrlCompressor;
 
+import java.util.Calendar;
 import java.util.Collection;
 
 /**
@@ -57,20 +58,6 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
      */
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
-    /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     */
-    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            if (AUTO_HIDE) {
-                delayedHide(AUTO_HIDE_DELAY_MILLIS);
-            }
-            return false;
-        }
-    };
     TextView urlLink;
     private Tracker mTracker;
     private String BeaconName = null;
@@ -86,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
     private String telemetryData = null;
     private String url = null;
     private String urlDescription = null;
+    private String myDate = null;
     private double distance = 0;
     private int Rssi = 0;
     private BeaconManager mBeaconManager;
@@ -127,6 +115,20 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
         }
     };
     /**
+     * Touch listener to use for in-layout UI controls to delay hiding the
+     * system UI. This is to prevent the jarring behavior of controls going away
+     * while interacting with activity UI.
+     */
+    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            if (AUTO_HIDE) {
+                delayedHide(AUTO_HIDE_DELAY_MILLIS);
+            }
+            return false;
+        }
+    };
+    /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
@@ -144,7 +146,8 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
         mTracker = application.getDefaultTracker();
         //[[Endo Google Analytics
 
-        MobileAds.initialize(getApplicationContext(), "ca-app-pub-4209540176643828~5779959391");
+        //ca-app-pub-4209540176643828/4024024590
+        MobileAds.initialize(getApplicationContext(), "ca-app-pub-4209540176643828/4024024590");
         AdView mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
@@ -267,6 +270,8 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
     @Override
     public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
         for (Beacon beacon : beacons) {
+            myDate = java.text.DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
+
             Log.d("Beacon Service Uuid", beacon.getServiceUuid() + " uuid");
             Log.d("Beacon Type Code", beacon.getBeaconTypeCode() + " type");
             if (beacon.getServiceUuid() == 0xfeaa && beacon.getBeaconTypeCode() == 0x00) {
@@ -286,7 +291,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
                             ", has been up for : " + uptime + " seconds" +
                             ", has a battery level of " + batteryMilliVolts + " mV" +
                             ", and has transmitted " + pduCount + " advertisements.");
-                    telemetryData = "Si";
+                    telemetryData = "Yes";
 
                 } else {
                     telemetryData = "No";
@@ -313,6 +318,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
                 runOnUiThread(new Runnable() {
                     public void run() {
                         try {
+                            ((TextView) MainActivity.this.findViewById(R.id.AppName)).setText("Eddystone Beacon");
                             ((TextView) MainActivity.this.findViewById(R.id.nameBeacon)).setText(BeaconName);
                             ((TextView) MainActivity.this.findViewById(R.id.namespaceID)).setText(namespaceId);
                             ((TextView) MainActivity.this.findViewById(R.id.instanceID)).setText(instanceId);
@@ -320,6 +326,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
                             ((TextView) MainActivity.this.findViewById(R.id.rssiView)).setText(RSSIString);
                             ((TextView) MainActivity.this.findViewById(R.id.TxPower)).setText(mTxPower);
                             ((TextView) MainActivity.this.findViewById(R.id.telemetryData)).setText(telemetryData);
+                            ((TextView) MainActivity.this.findViewById(R.id.aliveId)).setText(myDate);
                         } catch (Exception e) {
                             Log.d(TAG, e.getMessage());
                         }
@@ -346,6 +353,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
                         try {
                             ((TextView) MainActivity.this.findViewById(R.id.AppName)).setText("Eddystone URL");
                             ((TextView) MainActivity.this.findViewById(R.id.urlId)).setText(urlDescription);
+                            ((TextView) MainActivity.this.findViewById(R.id.aliveId)).setText(myDate);
                             urlLink.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -380,7 +388,9 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
                 RSSIString = Rssi + " dBm";
 
                 mTxPower = beacon.getTxPower() + " dBm";
-                telemetryData="No";
+                telemetryData = "No";
+
+
 
                 runOnUiThread(new Runnable() {
                     public void run() {
@@ -400,6 +410,8 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
                             ((TextView) MainActivity.this.findViewById(R.id.rssiView)).setText(RSSIString);
                             ((TextView) MainActivity.this.findViewById(R.id.TxPower)).setText(mTxPower);
                             ((TextView) MainActivity.this.findViewById(R.id.telemetryData)).setText(telemetryData);
+                            ((TextView) MainActivity.this.findViewById(R.id.aliveId)).setText(myDate);
+
                             (MainActivity.this.findViewById(R.id.urlId)).setVisibility(View.INVISIBLE);
 
 
