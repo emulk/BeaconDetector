@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
         // Detect the URL frame:
         mBeaconManager.getBeaconParsers().add(new BeaconParser().
                 setBeaconLayout("s:0-1=feaa,m:2-2=10,p:3-3:-41,i:4-21v"));
-
+        //Detecte iBeacon frame
         mBeaconManager.getBeaconParsers().add(new BeaconParser().
                 setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
         mBeaconManager.bind(this);
@@ -371,10 +371,11 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
             } else if (beacon.getServiceUuid() != 0 && beacon.getBeaconTypeCode() == 533) {
                 //bluetoothName emulkBeacon bluetoothAdress DE:F0:70:9E:E9:B8 datafields []
                 // ExtraDataFiels[] id1 ebefd083-70a2-47c8-9837-e7b5634df524 id2 10 id3 1 manufacter 76
+                //battery level beacon.getDataFields().get(0)
                 Log.d(TAG, "Ho appena visto un iBeacon");
-                Log.d(TAG, "bluetoothName " + beacon.getBluetoothName() + " bluetoothAdress " + beacon.getBluetoothAddress()
+               /* Log.d(TAG, "bluetoothName " + beacon.getBluetoothName() + " bluetoothAdress " + beacon.getBluetoothAddress()
                         + " datafields " + beacon.getDataFields() + " ExtraDataFiels" + beacon.getExtraDataFields() + " id1 " + beacon.getId1()
-                        + " id2 " + beacon.getId2() + " id3 " + beacon.getId3() + " manufacter " + beacon.getManufacturer());
+                        + " id2 " + beacon.getId2() + " id3 " + beacon.getId3() + " manufacter " + beacon.getManufacturer());*/
 
                 BeaconName = beacon.getBluetoothName();
                 BeaconUUID = (beacon.getId1() + "").toUpperCase();
@@ -389,7 +390,6 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
 
                 mTxPower = beacon.getTxPower() + " dBm";
                 telemetryData = "No";
-
 
 
                 runOnUiThread(new Runnable() {
@@ -427,7 +427,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
                 runOnUiThread(new Runnable() {
                     public void run() {
                         try {
-                            //se non ho le caratteristiche di eddystone setto tutti i campi invisibili
+                            //se non ho le caratteristiche di eddystone/iBeacon/EddystoneURL setto tutti i campi invisibili
                             ((TextView) MainActivity.this.findViewById(R.id.beaconLayout)).setVisibility(View.INVISIBLE);
                             ((TextView) MainActivity.this.findViewById(R.id.namespaceLayout)).setVisibility(View.INVISIBLE);
                             ((TextView) MainActivity.this.findViewById(R.id.instanceLayout)).setVisibility(View.INVISIBLE);

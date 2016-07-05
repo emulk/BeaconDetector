@@ -7,10 +7,12 @@ la distanza dal beacon in metri,
 il segnale Rssi e il TxPower.
 
 
-
 Eddystone è un protocollo open source, lanciato da google nel 2015, è simile al protocollo iBeacon di Apple ma con numerossi opzioni in più.
 
 In particolare il protocollo Eddyston è in grado di inviare quatro tipi di segnali:
+
+[Per saperne di più sul BLE, oppure sui protocolli iBeacon ed Eddyston leggi: ](http://www.slideshare.net/orgestshehaj/beacons-63756145)
+[Per scarica l'app dal google play: ](https://play.google.com/store/apps/details?id=beacondetector.emulk.it.beacondetector)
 
 ##UID
 Si tratta di un id univoco
