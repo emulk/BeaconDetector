@@ -3,6 +3,11 @@ package beacondetector.emulk.it.beacondetector;
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
+import android.database.Cursor;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -40,7 +45,7 @@ import java.util.Collection;
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class MainActivity extends AppCompatActivity implements BeaconConsumer, RangeNotifier {
+public class MainActivity extends AppCompatActivity implements BeaconConsumer, RangeNotifier, SensorEventListener {
     private static final String TAG = "MainActivity";
     /**
      * Whether or not the system UI should be auto-hidden after
@@ -57,9 +62,31 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
      * and a change of the status and navigation bar.
      */
     private static final int UI_ANIMATION_DELAY = 300;
+    final double alpha = 0.8;
     private final Handler mHideHandler = new Handler();
+    /**
+     * Touch listener to use for in-layout UI controls to delay hiding the
+     * system UI. This is to prevent the jarring behavior of controls going away
+     * while interacting with activity UI.
+     */
+    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            if (AUTO_HIDE) {
+                delayedHide(AUTO_HIDE_DELAY_MILLIS);
+            }
+            return false;
+        }
+    };
+    double ax, ay, az;
+    /*DB*/
+    BeaconDB myDB;
+    Cursor cursorlast;
     TextView urlLink;
+    private SensorManager mSensorManager;
+    private Sensor mAccelerometer;
     private Tracker mTracker;
+    private String ProtocolName = null;
     private String BeaconName = null;
     private String namespaceId = null;
     private String instanceId = null;
@@ -70,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
     private String distanceString = null;
     private String RSSIString = null;
     private String mTxPower = null;
+    private int mTxPowerTMP = 0;
     private String telemetryData = null;
     private String url = null;
     private String urlDescription = null;
@@ -115,20 +143,6 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
         }
     };
     /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     */
-    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            if (AUTO_HIDE) {
-                delayedHide(AUTO_HIDE_DELAY_MILLIS);
-            }
-            return false;
-        }
-    };
-    /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
@@ -140,6 +154,8 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
 
         setContentView(R.layout.activity_main);
 
+        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         //[[Google Analytics ]]
         // Obtain the shared Tracker instance.
         AnalyticsApplication application = (AnalyticsApplication) getApplication();
@@ -151,6 +167,9 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
         AdView mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+
+        //creo un istanza del DB
+        openDB();
 
 
         //se il bluetooth non è attivo, lo attivo
@@ -276,6 +295,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
             Log.d("Beacon Type Code", beacon.getBeaconTypeCode() + " type");
             if (beacon.getServiceUuid() == 0xfeaa && beacon.getBeaconTypeCode() == 0x00) {
                 // This is a Eddystone-UID frame
+                ProtocolName = "Eddystone";
                 Identifier namespaceIdTMP = beacon.getId1();
 
                 // Do we have telemetry data?
@@ -308,7 +328,24 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
                 Rssi = beacon.getRssi();
                 RSSIString = Rssi + " dBm";
 
-                mTxPower = beacon.getTxPower() + " dBm";
+                mTxPowerTMP = beacon.getTxPower();
+                //prendo gli ultimi valori
+
+                cursorlast = myDB.LastQueryEddystone();
+                if (cursorlast.moveToLast()) {
+                    long id = cursorlast.getLong(BeaconDB.Col_ROWID);
+                    String namespaceDB = cursorlast.getString(BeaconDB.Col_NameSpace);
+                    int distanceDB = cursorlast.getInt(BeaconDB.Col_Distance);
+                    Log.d(TAG, id + " " + namespaceDB + " " + distanceDB);
+                }
+
+
+                Log.d(TAG, "Insert row in DB");
+                /*Inserisco una riga nella tabella eddystone*/
+                myDB.insertRowEddystoneTable(ProtocolName, BeaconName, namespaceId, instanceId, (int) distance, Rssi, mTxPowerTMP, myDate);
+
+
+                mTxPower = mTxPowerTMP + " dBm";
 
                 Log.d(TAG, RSSIString);
 
@@ -338,14 +375,18 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
 
             } else if (beacon.getServiceUuid() == 0xfeaa && beacon.getBeaconTypeCode() == 0x10) {
                 // This is a Eddystone-URL frame
+                ProtocolName = "Eddystone URL";
                 url = UrlBeaconUrlCompressor.uncompress(beacon.getId1().toByteArray());
                 urlDescription = url;
+                BeaconName = beacon.getBluetoothName();
                 if (!url.startsWith("http://") && !url.startsWith("https://")) {
                     url = "http://" + url;
                 }
                 Log.d(TAG, "I see a beacon transmitting a url: " + url +
                         " approximately " + beacon.getDistance() + " meters away.");
 
+
+                myDB.insertRowUrlTable(ProtocolName, BeaconName, url, myDate);
 
                 urlLink = (TextView) findViewById(R.id.urlId);
                 runOnUiThread(new Runnable() {
@@ -369,6 +410,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
                 });
 
             } else if (beacon.getServiceUuid() != 0 && beacon.getBeaconTypeCode() == 533) {
+                ProtocolName = "iBeacon";
                 //bluetoothName emulkBeacon bluetoothAdress DE:F0:70:9E:E9:B8 datafields []
                 // ExtraDataFiels[] id1 ebefd083-70a2-47c8-9837-e7b5634df524 id2 10 id3 1 manufacter 76
                 //battery level beacon.getDataFields().get(0)
@@ -388,9 +430,11 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
                 Rssi = beacon.getRssi();
                 RSSIString = Rssi + " dBm";
 
-                mTxPower = beacon.getTxPower() + " dBm";
+                mTxPowerTMP = beacon.getTxPower();
+                mTxPower = mTxPowerTMP + " dBm";
                 telemetryData = "No";
 
+                myDB.insertRowiBeaconTable(ProtocolName, BeaconName, BeaconUUID, BeaconMajor, BeaconMinor, (int) distance, Rssi, mTxPowerTMP, myDate);
 
                 runOnUiThread(new Runnable() {
                     public void run() {
@@ -489,6 +533,9 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
             mBeaconManager.setBackgroundMode(false);
         }
 
+        //accelerometr
+        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+
     }
 
     @Override
@@ -497,6 +544,8 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
         if (mBeaconManager.isBound(this)) {
             mBeaconManager.setBackgroundMode(true);
         }
+        //accelerometr
+        mSensorManager.unregisterListener(this);
     }
 
     @Override
@@ -527,6 +576,39 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
         super.onDestroy();
         //qualcosa alla distruzione del gioco
         mBeaconManager.unbind(this);
+        closeDB();
+    }
+
+    // apro il database
+    private void openDB() {
+        myDB = new BeaconDB(this);
+        myDB.open();
+    }
+
+    private void closeDB() {
+        myDB.close();
+
+    }
+
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    }
+
+    public void onSensorChanged(SensorEvent event) {
+        double gravity[] = new double[3];
+
+
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            // Isolate the force of gravity with the low-pass filter.
+            gravity[0] = alpha * gravity[0] + (1 - alpha) * event.values[0];
+            gravity[1] = alpha * gravity[1] + (1 - alpha) * event.values[1];
+            gravity[2] = alpha * gravity[2] + (1 - alpha) * event.values[2];
+
+            ax = event.values[0] - gravity[0];
+            ay = event.values[1] - gravity[1];
+            az = event.values[2] - gravity[2];
+
+            Log.d(TAG, "Accelerometr " + ax + " " + ay + " " + az);
+        }
     }
 
 
