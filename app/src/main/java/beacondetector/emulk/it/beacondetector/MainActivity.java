@@ -1,8 +1,6 @@
 package beacondetector.emulk.it.beacondetector;
 
-import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
-import android.content.Intent;
 import android.database.Cursor;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -10,13 +8,13 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.RemoteException;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +36,7 @@ import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
 import org.altbeacon.beacon.utils.UrlBeaconUrlCompressor;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 
@@ -47,42 +46,14 @@ import java.util.Collection;
  */
 public class MainActivity extends AppCompatActivity implements BeaconConsumer, RangeNotifier, SensorEventListener {
     private static final String TAG = "MainActivity";
-    /**
-     * Whether or not the system UI should be auto-hidden after
-     * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
-     */
-    private static final boolean AUTO_HIDE = true;
-    /**
-     * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
-     * user interaction before hiding the system UI.
-     */
-    private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
-    /**
-     * Some older devices needs a small delay between UI widget updates
-     * and a change of the status and navigation bar.
-     */
-    private static final int UI_ANIMATION_DELAY = 300;
     final double alpha = 0.8;
-    private final Handler mHideHandler = new Handler();
-    /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     */
-    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            if (AUTO_HIDE) {
-                delayedHide(AUTO_HIDE_DELAY_MILLIS);
-            }
-            return false;
-        }
-    };
+    ArrayList<BeaconStructure> results = new ArrayList<BeaconStructure>();
     double ax, ay, az;
     /*DB*/
     BeaconDB myDB;
     Cursor cursorlast;
     TextView urlLink;
+    private ListView lv1;
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
     private Tracker mTracker;
@@ -105,43 +76,8 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
     private double distance = 0;
     private int Rssi = 0;
     private BeaconManager mBeaconManager;
-    private View mContentView;
-    private final Runnable mHidePart2Runnable = new Runnable() {
-        @SuppressLint("InlinedApi")
-        @Override
-        public void run() {
-            // Delayed removal of status and navigation bar
 
-            // Note that some of these constants are new as of API 16 (Jelly Bean)
-            // and API 19 (KitKat). It is safe to use them, as they are inlined
-            // at compile-time and do nothing on earlier devices.
-            mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
-                    | View.SYSTEM_UI_FLAG_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-        }
-    };
-    private View mControlsView;
-    private final Runnable mShowPart2Runnable = new Runnable() {
-        @Override
-        public void run() {
-            // Delayed display of UI elements
-            ActionBar actionBar = getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.show();
-            }
-            mControlsView.setVisibility(View.VISIBLE);
-        }
-    };
-    private boolean mVisible;
-    private final Runnable mHideRunnable = new Runnable() {
-        @Override
-        public void run() {
-            hide();
-        }
-    };
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -151,8 +87,12 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //full screen activity
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_main);
+        lv1 = (ListView) findViewById(R.id.listView);
 
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -180,18 +120,6 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
             Log.d(TAG, "BlueTooth enable");
         }
 
-        mVisible = true;
-        mControlsView = findViewById(R.id.AppName);
-        mContentView = findViewById(R.id.fullscreen_content);
-
-
-        // Set up the user interaction to manually show or hide the system UI.
-        mContentView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toggle();
-            }
-        });
 
         mBeaconManager = BeaconManager.getInstanceForApplication(this.getApplicationContext());
         // Detect the main Eddystone-UID frame:
@@ -218,60 +146,31 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-    }
 
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
 
-        // Trigger the initial hide() shortly after the activity has been
-        // created, to briefly hint to the user that UI controls
-        // are available.
-        delayedHide(100);
+        //listview example
+        // definisco un array di stringhe
+        /*
+        String[] nameproducts = new String[] { "Product1", "Product2", "Product3" };
 
-    }
-
-    private void toggle() {
-        if (mVisible) {
-            hide();
-        } else {
-            show();
+        // definisco un ArrayList
+        final ArrayList <String> listp = new ArrayList<String>();
+        for (int i = 0; i < nameproducts.length; ++i) {
+            listp.add(nameproducts[i]);
         }
-    }
+        // recupero la lista dal layout
+        final ListView mylist = (ListView) findViewById(R.id.listView);
 
-    private void hide() {
-        // Hide UI first
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.hide();
-        }
-        mControlsView.setVisibility(View.GONE);
-        mVisible = false;
+        // creo e istruisco l'adattatore
+        final ArrayAdapter <String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listp);
 
-        // Schedule a runnable to remove the status and navigation bar after a delay
-        mHideHandler.removeCallbacks(mShowPart2Runnable);
-        mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
-    }
+        // inietto i dati
+        mylist.setAdapter(adapter);
+        */
 
-    @SuppressLint("InlinedApi")
-    private void show() {
-        // Show the system bar
-        mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
-        mVisible = true;
+        //ArrayList<BeaconStructure> beaconResults = GetBeaconResults() ;
 
-        // Schedule a runnable to display UI elements after a delay
-        mHideHandler.removeCallbacks(mHidePart2Runnable);
-        mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
-    }
 
-    /**
-     * Schedules a call to hide() in [delay] milliseconds, canceling any
-     * previously scheduled calls.
-     */
-    private void delayedHide(int delayMillis) {
-        mHideHandler.removeCallbacks(mHideRunnable);
-        mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
 
 
@@ -288,6 +187,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
 
     @Override
     public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
+        results.clear();
         for (Beacon beacon : beacons) {
             myDate = java.text.DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
 
@@ -342,8 +242,20 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
 
                 Log.d(TAG, "Insert row in DB");
                 /*Inserisco una riga nella tabella eddystone*/
-                myDB.insertRowEddystoneTable(ProtocolName, BeaconName, namespaceId, instanceId, (int) distance, Rssi, mTxPowerTMP, myDate);
+                //myDB.insertRowEddystoneTable(ProtocolName, BeaconName, namespaceId, instanceId, (int) distance, Rssi, mTxPowerTMP, myDate);
+                BeaconStructure beaconView = new BeaconStructure();
+                beaconView.setNamespaceLayout("NameSpace");
+                beaconView.setInstanceLayout("Instance");
 
+                beaconView.setBeaconProtocol(ProtocolName);
+                beaconView.setBeaconName(BeaconName);
+                beaconView.setBeaconID(namespaceId);
+                beaconView.setInstance(instanceId);
+                beaconView.setDistance(distanceString);
+                beaconView.setRssi(RSSIString);
+                beaconView.setTxPower(mTxPower);
+                beaconView.setLastAliveOn(myDate);
+                results.add(beaconView);
 
                 mTxPower = mTxPowerTMP + " dBm";
 
@@ -352,30 +264,16 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
                 Log.d("RangingActivity", "I see a beacon transmitting namespace id: " + namespaceId +
                         " and instance id: " + instanceId +
                         " approximately " + beacon.getDistance() + " meters away.");
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        try {
-                            ((TextView) MainActivity.this.findViewById(R.id.AppName)).setText("Eddystone Beacon");
-                            ((TextView) MainActivity.this.findViewById(R.id.nameBeacon)).setText(BeaconName);
-                            ((TextView) MainActivity.this.findViewById(R.id.namespaceID)).setText(namespaceId);
-                            ((TextView) MainActivity.this.findViewById(R.id.instanceID)).setText(instanceId);
-                            ((TextView) MainActivity.this.findViewById(R.id.beaconDistance)).setText(distanceString);
-                            ((TextView) MainActivity.this.findViewById(R.id.rssiView)).setText(RSSIString);
-                            ((TextView) MainActivity.this.findViewById(R.id.TxPower)).setText(mTxPower);
-                            ((TextView) MainActivity.this.findViewById(R.id.telemetryData)).setText(telemetryData);
-                            ((TextView) MainActivity.this.findViewById(R.id.aliveId)).setText(myDate);
-                        } catch (Exception e) {
-                            Log.d(TAG, e.getMessage());
-                        }
-
-
-                    }
-                });
 
 
             } else if (beacon.getServiceUuid() == 0xfeaa && beacon.getBeaconTypeCode() == 0x10) {
                 // This is a Eddystone-URL frame
                 ProtocolName = "Eddystone URL";
+                Rssi = beacon.getRssi();
+                RSSIString = Rssi + " dBm";
+
+                mTxPowerTMP = beacon.getTxPower();
+                mTxPower = mTxPowerTMP + " dBm";
                 url = UrlBeaconUrlCompressor.uncompress(beacon.getId1().toByteArray());
                 urlDescription = url;
                 BeaconName = beacon.getBluetoothName();
@@ -386,8 +284,18 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
                         " approximately " + beacon.getDistance() + " meters away.");
 
 
-                myDB.insertRowUrlTable(ProtocolName, BeaconName, url, myDate);
+                BeaconStructure beaconView = new BeaconStructure();
+                beaconView.setBeaconProtocol(ProtocolName);
+                beaconView.setUrlId(url);
+                beaconView.setDistance(distanceString);
+                beaconView.setRssi(RSSIString);
+                beaconView.setTxPower(mTxPower);
+                beaconView.setLastAliveOn(myDate);
+                results.add(beaconView);
 
+                // myDB.insertRowUrlTable(ProtocolName, BeaconName, url, myDate);
+
+                /*
                 urlLink = (TextView) findViewById(R.id.urlId);
                 runOnUiThread(new Runnable() {
                     public void run() {
@@ -407,7 +315,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
                             Log.d(TAG, e.getMessage());
                         }
                     }
-                });
+                });*/
 
             } else if (beacon.getServiceUuid() != 0 && beacon.getBeaconTypeCode() == 533) {
                 ProtocolName = "iBeacon";
@@ -434,7 +342,29 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
                 mTxPower = mTxPowerTMP + " dBm";
                 telemetryData = "No";
 
-                myDB.insertRowiBeaconTable(ProtocolName, BeaconName, BeaconUUID, BeaconMajor, BeaconMinor, (int) distance, Rssi, mTxPowerTMP, myDate);
+                BeaconStructure beaconView = new BeaconStructure();
+                beaconView.setNamespaceLayout("UID");
+                beaconView.setInstanceLayout("Major/Minor");
+                beaconView.setBeaconProtocol(ProtocolName);
+                beaconView.setBeaconName(BeaconName);
+                beaconView.setBeaconID(BeaconUUID);
+                beaconView.setInstance(BeaconMajor);
+                beaconView.setDistance(distanceString);
+                beaconView.setRssi(RSSIString);
+                beaconView.setTxPower(mTxPower);
+                beaconView.setLastAliveOn(myDate);
+                results.add(beaconView);
+
+
+                //myDB.insertRowiBeaconTable(ProtocolName, BeaconName, BeaconUUID, BeaconMajor, BeaconMinor, (int) distance, Rssi, mTxPowerTMP, myDate);
+
+                /*
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        lv1.setAdapter(new BeaconAdapter(MainActivity.this, results));
+                    }
+                });
 
                 runOnUiThread(new Runnable() {
                     public void run() {
@@ -492,11 +422,35 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
                             Log.d(TAG, e.getMessage());
                         }
                     }
-                });
+                });*/
 
             }
 
         }
+
+        //visualizzo a video tutti i beacon che ho visto
+        runOnUiThread(new Runnable() {
+            public void run() {
+                try {
+                    lv1.setAdapter(new BeaconAdapter(MainActivity.this, results));
+                    lv1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view,
+                                                int position, long id) {
+                            /*Toast.makeText(getApplicationContext(),
+                                    "Click ListItem Number " + position, Toast.LENGTH_LONG)
+                                    .show();*/
+                        }
+                    });
+
+
+                } catch (Exception e) {
+                    Log.d(TAG, e.getMessage());
+                }
+
+
+            }
+        });
     }
 
 
@@ -518,6 +472,9 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
                 Uri.parse("android-app://beacondetector.emulk.it.beacondetector/http/host/path")
         );
         AppIndex.AppIndexApi.start(client, viewAction);
+        if (mBeaconManager.isBound(this)) {
+            mBeaconManager.setBackgroundMode(false);
+        }
     }
 
     @Override
