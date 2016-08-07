@@ -21,8 +21,6 @@
             android:textSize="13dp"
             />
 
-
-
         <TextView
             android:id="@+id/beaconLayout"
             android:layout_width="wrap_content"
@@ -40,8 +38,7 @@
             android:id="@+id/nameBeacon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/namespaceID"
-            android:layout_alignRight="@+id/namespaceID"
+            android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/beaconLayout"
             android:text="NameBeacon"
             android:textAppearance="?android:attr/textAppearanceLarge"
@@ -53,8 +50,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/namespaceLayout"
-            android:layout_alignEnd="@+id/telemetryData"
-            android:layout_alignRight="@+id/telemetryData"
+            android:layout_alignEnd="@+id/nameBeacon"
+            android:layout_alignRight="@+id/nameBeacon"
             android:text="Namespace"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="13dp" />
@@ -86,7 +83,6 @@
             android:id="@+id/instanceID"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/beaconDistance"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/instanceLayout"
@@ -111,8 +107,8 @@
             android:id="@+id/beaconDistance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/telemetryData"
-            android:layout_alignRight="@+id/telemetryData"
+            android:layout_alignEnd="@+id/instanceID"
+            android:layout_alignRight="@+id/instanceID"
             android:layout_below="@+id/instanceLayout"
             android:text="Distance:"
             android:textAppearance="?android:attr/textAppearanceLarge"
@@ -165,33 +161,12 @@
             android:textSize="13dp"/>
 
         <TextView
-            android:id="@+id/telemetryLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/txPowerLayout"
-            android:text="Telemetry Data:"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textStyle="bold"
-            android:textSize="13dp"/>
-
-        <TextView
-            android:id="@+id/telemetryData"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/telemetryLayout"
-            android:text="TelemetryData"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="13dp"/>
-
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Last alive on"
             android:id="@+id/aliveLayout"
-            android:layout_below="@+id/telemetryLayout"
+            android:layout_below="@+id/rssiLayout"
             android:layout_alignLeft="@+id/instanceLayout"
             android:layout_alignStart="@+id/instanceLayout"
             android:textStyle="bold"
@@ -204,8 +179,8 @@
             android:text="alive"
             android:id="@+id/aliveId"
             android:layout_alignTop="@+id/aliveLayout"
-            android:layout_alignRight="@+id/telemetryData"
-            android:layout_alignEnd="@+id/telemetryData"
+            android:layout_alignRight="@+id/TxPower"
+            android:layout_alignEnd="@+id/TxPower"
             android:textSize="13dp"/>
 
         <TextView
@@ -227,14 +202,11 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/urlLayout"
-            android:layout_gravity="right|top"
             android:clickable="true"
             android:onClick="onClick"
             android:text="EddystonUrl"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="13dp"/>
-
-
 
     </RelativeLayout>
 

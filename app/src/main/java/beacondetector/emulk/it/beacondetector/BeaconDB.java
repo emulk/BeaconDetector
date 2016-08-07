@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 /**
  * Created by asd on 08/07/16.
@@ -25,7 +24,6 @@ public class BeaconDB {
     public static final String UrlLink = "UrlLink";
     //Nomi colonne protocollo iBeacon
     public static final String Major = "Major";
-    public static final String Minor = "Minor";
     //colonne
     public static final int Col_ROWID = 0;
     public static final int Col_ProtocolName = 1;
@@ -38,7 +36,7 @@ public class BeaconDB {
     public static final int Col_LastAliveOn = 8;
     public static final int Col_UrlLink = 9;
     public static final int Col_Major = 10;
-    public static final int Col_Minor = 11;
+
 
     public static final String[] ALL_KEYSEDDYSTONE = new String[]{
             KEY_ROWID,
@@ -65,8 +63,7 @@ public class BeaconDB {
             ProtocolName,
             BeaconName,
             NameSpace,
-            Major,
-            Minor,
+            Instance,
             Distance,
             RssI,
             TxPower,
@@ -82,7 +79,7 @@ public class BeaconDB {
     public static final String DATABASE_TABLEiBEACON = "iBeacon_Table";
 
     /*Track the DB version scheme, if the scheme change increment the database version number*/
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 3;
 
     /*Query SQL per creare la tabella del protocollo EddystoneUID*/
     private static final String DATABASE_CREATE_SQL_EDDYSTONE = "create table "
@@ -106,7 +103,7 @@ public class BeaconDB {
             + DATABASE_TABLEiBEACON + " (" + KEY_ROWID
             + " integer primary key autoincrement, "
             + ProtocolName + " string , " + BeaconName + " string , "  + NameSpace + " string , "
-            + Major + "integer , " + Minor + "integer , " + Distance + " integer ," + RssI + " integer, " + TxPower + " integer , " + LastAlive + " string"
+            + Instance + " string , " + Distance + " integer ," + RssI + " integer, " + TxPower + " integer , " + LastAlive + " string"
 
             + ");";
 
@@ -168,15 +165,15 @@ public class BeaconDB {
     }
 
     // inserisce una nuova righa all'interno del database
-    public long insertRowiBeaconTable( String protocolName, String beaconName, String nameSpace, String major,String minor, int distance, int rssI, int txPower, String lastAlive) {
+    //insertRowiBeaconTable(ProtocolName, BeaconName, BeaconUUID, BeaconMajor, BeaconMinor, (int) distance, Rssi, mTxPowerTMP, myDate);
+    public long insertRowiBeaconTable( String protocolName, String beaconName, String uuid,String major,  int distance, int rssI, int txPower, String lastAlive) {
 
         // Create row's data:
         ContentValues initialValues = new ContentValues();
         initialValues.put(ProtocolName, protocolName);
         initialValues.put(BeaconName, beaconName);
-        initialValues.put(NameSpace, nameSpace);
-        initialValues.put(Major, major);
-        initialValues.put(Minor, minor);
+        initialValues.put(NameSpace, uuid);
+        initialValues.put(Instance, major);
         initialValues.put(Distance, distance);
         initialValues.put(RssI, rssI);
         initialValues.put(TxPower, txPower);
@@ -193,10 +190,13 @@ public class BeaconDB {
     }
 
 
-    /*Restituisce l'ultima riga della tabella eddystone uid*/
+    /*Restituisce tutte le rige della tabella eddystone */
     public Cursor LastQueryEddystone() {
+        //in ordine discendente, lultimo beacon lo faccio vedere per primo
+        String orderBy = "LastAlive DESC";
+        String limit = "100";
         Cursor cursorlast = db.query(true, DATABASE_TABLEEDDYSTONE, ALL_KEYSEDDYSTONE, null,
-                null, null, null, null, null);
+                null, null, null, orderBy, limit);
 
         if (cursorlast.moveToFirst() == cursorlast.moveToLast()) {
             cursorlast.moveToFirst();
@@ -206,6 +206,27 @@ public class BeaconDB {
             return cursorlast;
         }
 
+    }
+
+    public static final String[] ALL_KEYSEDDYSTONEDISTINCT = new String[]{
+            KEY_ROWID,
+            ProtocolName,
+            BeaconName,
+            NameSpace,
+            Instance
+
+    };
+
+    // Return all data in the database.
+    public Cursor getAllEddystonRows() {
+        String where = null;
+        String limit = "100";
+        Cursor c = db.query(true, DATABASE_TABLEEDDYSTONE, ALL_KEYSEDDYSTONEDISTINCT, where, null, null,
+                null, null,limit);
+        if (c != null) {
+            c.moveToFirst();
+        }
+        return c;
     }
 
     /*Restituisce l'ultima riga della tabella eddystone url*/
@@ -223,10 +244,15 @@ public class BeaconDB {
 
     }
 
+
+
+
     /*Restituisce l'ultima riga della tabella iBeacon*/
     public Cursor LastQueryiBeacon() {
+        String orderBy = "LastAlive DESC";
+        String limit = "100";
         Cursor cursorlast = db.query(true, DATABASE_TABLEiBEACON, ALL_KEYSiBEACON, null,
-                null, null, null, null, null);
+                null, null, null, orderBy, limit);
 
         if (cursorlast.moveToFirst() == cursorlast.moveToLast()) {
             cursorlast.moveToFirst();
@@ -237,41 +263,6 @@ public class BeaconDB {
         }
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -297,9 +288,10 @@ public class BeaconDB {
 
         @Override
         public void onUpgrade(SQLiteDatabase _db, int oldVersion, int newVersion) {
+            /*
             Log.w(TAG, "Upgrading application's database from version "
                     + oldVersion + " to " + newVersion
-                    + ", which will destroy all old data!");
+                    + ", which will destroy all old data!");*/
 
             // Destroy old database:
             _db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLEEDDYSTONE);

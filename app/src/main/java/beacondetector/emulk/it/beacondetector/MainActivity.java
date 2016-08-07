@@ -1,6 +1,7 @@
 package beacondetector.emulk.it.beacondetector;
 
 import android.bluetooth.BluetoothAdapter;
+import android.content.Intent;
 import android.database.Cursor;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -47,12 +48,12 @@ import java.util.Collection;
 public class MainActivity extends AppCompatActivity implements BeaconConsumer, RangeNotifier, SensorEventListener {
     private static final String TAG = "MainActivity";
     final double alpha = 0.8;
-    ArrayList<BeaconStructure> results = new ArrayList<BeaconStructure>();
     double ax, ay, az;
+    private ArrayList<BeaconStructure> results = new ArrayList<BeaconStructure>();
     /*DB*/
-    BeaconDB myDB;
-    Cursor cursorlast;
-    TextView urlLink;
+    private BeaconDB myDB;
+    private Cursor cursorlast;
+    private TextView urlLink;
     private ListView lv1;
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
@@ -92,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_main);
+
         lv1 = (ListView) findViewById(R.id.listView);
 
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -117,58 +119,14 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
         if (!mBluetoothAdapter.isEnabled()) {
             mBluetoothAdapter.enable();
             Toast.makeText(getApplicationContext(), "BlueTooth enable", Toast.LENGTH_LONG).show();
-            Log.d(TAG, "BlueTooth enable");
+            //Log.d(TAG, "BlueTooth enable");
         }
 
-
-        mBeaconManager = BeaconManager.getInstanceForApplication(this.getApplicationContext());
-        // Detect the main Eddystone-UID frame:
-        mBeaconManager.getBeaconParsers().add(new BeaconParser().
-                setBeaconLayout("s:0-1=feaa,m:2-2=00,p:3-3:-41,i:4-13,i:14-19"));
-        // Detect the telemetry (TLM) frame:
-        mBeaconManager.getBeaconParsers().add(new BeaconParser().
-                setBeaconLayout("x,s:0-1=feaa,m:2-2=20,d:3-3,d:4-5,d:6-7,d:8-11,d:12-15"));
-        // Detect the URL frame:
-        mBeaconManager.getBeaconParsers().add(new BeaconParser().
-                setBeaconLayout("s:0-1=feaa,m:2-2=10,p:3-3:-41,i:4-21v"));
-        //Detecte iBeacon frame
-        mBeaconManager.getBeaconParsers().add(new BeaconParser().
-                setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
-        mBeaconManager.bind(this);
-
-        // Upon interacting with UI controls, delay any scheduled hide()
-        // operations to prevent the jarring behavior of controls going away
-        // while interacting with the UI.
-        //findViewById(R.id.nameBeacon).setOnTouchListener(mDelayHideTouchListener);
+        //start beacon listener
+        startBeaconListener();
 
 
-        //((TextView)MainActivity.this.findViewById(R.id.beaconDistance)).setText(distance);
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-
-
-        //listview example
-        // definisco un array di stringhe
-        /*
-        String[] nameproducts = new String[] { "Product1", "Product2", "Product3" };
-
-        // definisco un ArrayList
-        final ArrayList <String> listp = new ArrayList<String>();
-        for (int i = 0; i < nameproducts.length; ++i) {
-            listp.add(nameproducts[i]);
-        }
-        // recupero la lista dal layout
-        final ListView mylist = (ListView) findViewById(R.id.listView);
-
-        // creo e istruisco l'adattatore
-        final ArrayAdapter <String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listp);
-
-        // inietto i dati
-        mylist.setAdapter(adapter);
-        */
-
-        //ArrayList<BeaconStructure> beaconResults = GetBeaconResults() ;
 
 
     }
@@ -191,8 +149,6 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
         for (Beacon beacon : beacons) {
             myDate = java.text.DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
 
-            Log.d("Beacon Service Uuid", beacon.getServiceUuid() + " uuid");
-            Log.d("Beacon Type Code", beacon.getBeaconTypeCode() + " type");
             if (beacon.getServiceUuid() == 0xfeaa && beacon.getBeaconTypeCode() == 0x00) {
                 // This is a Eddystone-UID frame
                 ProtocolName = "Eddystone";
@@ -205,12 +161,10 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
                     long pduCount = beacon.getExtraDataFields().get(3);
                     long uptime = beacon.getExtraDataFields().get(4);
 
-                    Log.d(TAG, "Telemetry Data");
-
-                    Log.d(TAG, "The above beacon is sending telemetry version " + telemetryVersion +
+                    /*Log.d(TAG, "The above beacon is sending telemetry version " + telemetryVersion +
                             ", has been up for : " + uptime + " seconds" +
                             ", has a battery level of " + batteryMilliVolts + " mV" +
-                            ", and has transmitted " + pduCount + " advertisements.");
+                            ", and has transmitted " + pduCount + " advertisements.");*/
                     telemetryData = "Yes";
 
                 } else {
@@ -231,18 +185,19 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
                 mTxPowerTMP = beacon.getTxPower();
                 //prendo gli ultimi valori
 
+                /*
                 cursorlast = myDB.LastQueryEddystone();
                 if (cursorlast.moveToLast()) {
                     long id = cursorlast.getLong(BeaconDB.Col_ROWID);
                     String namespaceDB = cursorlast.getString(BeaconDB.Col_NameSpace);
                     int distanceDB = cursorlast.getInt(BeaconDB.Col_Distance);
                     Log.d(TAG, id + " " + namespaceDB + " " + distanceDB);
-                }
+                }*/
 
 
-                Log.d(TAG, "Insert row in DB");
-                /*Inserisco una riga nella tabella eddystone*/
-                //myDB.insertRowEddystoneTable(ProtocolName, BeaconName, namespaceId, instanceId, (int) distance, Rssi, mTxPowerTMP, myDate);
+
+                /*Inserisco una riga nella tabella eddystone, nel db*/
+                myDB.insertRowEddystoneTable(ProtocolName, BeaconName, namespaceId, instanceId, (int) distance, Rssi, mTxPowerTMP, myDate);
                 BeaconStructure beaconView = new BeaconStructure();
                 beaconView.setNamespaceLayout("NameSpace");
                 beaconView.setInstanceLayout("Instance");
@@ -259,11 +214,10 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
 
                 mTxPower = mTxPowerTMP + " dBm";
 
-                Log.d(TAG, RSSIString);
-
+/*
                 Log.d("RangingActivity", "I see a beacon transmitting namespace id: " + namespaceId +
                         " and instance id: " + instanceId +
-                        " approximately " + beacon.getDistance() + " meters away.");
+                        " approximately " + beacon.getDistance() + " meters away.");*/
 
 
             } else if (beacon.getServiceUuid() == 0xfeaa && beacon.getBeaconTypeCode() == 0x10) {
@@ -280,8 +234,8 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
                 if (!url.startsWith("http://") && !url.startsWith("https://")) {
                     url = "http://" + url;
                 }
-                Log.d(TAG, "I see a beacon transmitting a url: " + url +
-                        " approximately " + beacon.getDistance() + " meters away.");
+               /* Log.d(TAG, "I see a beacon transmitting a url: " + url +
+                        " approximately " + beacon.getDistance() + " meters away.");*/
 
 
                 BeaconStructure beaconView = new BeaconStructure();
@@ -295,34 +249,12 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
 
                 // myDB.insertRowUrlTable(ProtocolName, BeaconName, url, myDate);
 
-                /*
-                urlLink = (TextView) findViewById(R.id.urlId);
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        try {
-                            ((TextView) MainActivity.this.findViewById(R.id.AppName)).setText("Eddystone URL");
-                            ((TextView) MainActivity.this.findViewById(R.id.urlId)).setText(urlDescription);
-                            ((TextView) MainActivity.this.findViewById(R.id.aliveId)).setText(myDate);
-                            urlLink.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-
-                                    Intent urlIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                                    startActivity(urlIntent);
-                                }
-                            });
-                        } catch (Exception e) {
-                            Log.d(TAG, e.getMessage());
-                        }
-                    }
-                });*/
 
             } else if (beacon.getServiceUuid() != 0 && beacon.getBeaconTypeCode() == 533) {
                 ProtocolName = "iBeacon";
                 //bluetoothName emulkBeacon bluetoothAdress DE:F0:70:9E:E9:B8 datafields []
                 // ExtraDataFiels[] id1 ebefd083-70a2-47c8-9837-e7b5634df524 id2 10 id3 1 manufacter 76
                 //battery level beacon.getDataFields().get(0)
-                Log.d(TAG, "Ho appena visto un iBeacon");
                /* Log.d(TAG, "bluetoothName " + beacon.getBluetoothName() + " bluetoothAdress " + beacon.getBluetoothAddress()
                         + " datafields " + beacon.getDataFields() + " ExtraDataFiels" + beacon.getExtraDataFields() + " id1 " + beacon.getId1()
                         + " id2 " + beacon.getId2() + " id3 " + beacon.getId3() + " manufacter " + beacon.getManufacturer());*/
@@ -356,73 +288,8 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
                 results.add(beaconView);
 
 
-                //myDB.insertRowiBeaconTable(ProtocolName, BeaconName, BeaconUUID, BeaconMajor, BeaconMinor, (int) distance, Rssi, mTxPowerTMP, myDate);
-
-                /*
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        lv1.setAdapter(new BeaconAdapter(MainActivity.this, results));
-                    }
-                });
-
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        try {
-
-                            ((TextView) MainActivity.this.findViewById(R.id.AppName)).setText("iBeacon");
-                            ((TextView) MainActivity.this.findViewById(R.id.beaconLayout)).setText("Beacon Name");
-                            ((TextView) MainActivity.this.findViewById(R.id.namespaceLayout)).setText("UUID");
-                            ((TextView) MainActivity.this.findViewById(R.id.instanceLayout)).setText("Major/Minor");
-                            (MainActivity.this.findViewById(R.id.urlLayout)).setVisibility(View.INVISIBLE);
-
-
-                            ((TextView) MainActivity.this.findViewById(R.id.nameBeacon)).setText(BeaconName);
-                            ((TextView) MainActivity.this.findViewById(R.id.namespaceID)).setText(BeaconUUID);
-                            ((TextView) MainActivity.this.findViewById(R.id.instanceID)).setText(BeaconMajor);
-                            ((TextView) MainActivity.this.findViewById(R.id.beaconDistance)).setText(distanceString);
-                            ((TextView) MainActivity.this.findViewById(R.id.rssiView)).setText(RSSIString);
-                            ((TextView) MainActivity.this.findViewById(R.id.TxPower)).setText(mTxPower);
-                            ((TextView) MainActivity.this.findViewById(R.id.telemetryData)).setText(telemetryData);
-                            ((TextView) MainActivity.this.findViewById(R.id.aliveId)).setText(myDate);
-
-                            (MainActivity.this.findViewById(R.id.urlId)).setVisibility(View.INVISIBLE);
-
-
-                        } catch (Exception e) {
-                            Log.d(TAG, e.getMessage());
-                        }
-
-
-                    }
-                });
-
-            } else {
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        try {
-                            //se non ho le caratteristiche di eddystone/iBeacon/EddystoneURL setto tutti i campi invisibili
-                            ((TextView) MainActivity.this.findViewById(R.id.beaconLayout)).setVisibility(View.INVISIBLE);
-                            ((TextView) MainActivity.this.findViewById(R.id.namespaceLayout)).setVisibility(View.INVISIBLE);
-                            ((TextView) MainActivity.this.findViewById(R.id.instanceLayout)).setVisibility(View.INVISIBLE);
-                            ((TextView) MainActivity.this.findViewById(R.id.distanceLayout)).setVisibility(View.INVISIBLE);
-                            ((TextView) MainActivity.this.findViewById(R.id.rssiLayout)).setVisibility(View.INVISIBLE);
-                            ((TextView) MainActivity.this.findViewById(R.id.txPowerLayout)).setVisibility(View.INVISIBLE);
-                            ((TextView) MainActivity.this.findViewById(R.id.telemetryLayout)).setVisibility(View.INVISIBLE);
-
-
-                            ((TextView) MainActivity.this.findViewById(R.id.nameBeacon)).setVisibility(View.INVISIBLE);
-                            ((TextView) MainActivity.this.findViewById(R.id.namespaceID)).setVisibility(View.INVISIBLE);
-                            ((TextView) MainActivity.this.findViewById(R.id.instanceID)).setVisibility(View.INVISIBLE);
-                            ((TextView) MainActivity.this.findViewById(R.id.beaconDistance)).setVisibility(View.INVISIBLE);
-                            ((TextView) MainActivity.this.findViewById(R.id.rssiView)).setVisibility(View.INVISIBLE);
-                            ((TextView) MainActivity.this.findViewById(R.id.TxPower)).setVisibility(View.INVISIBLE);
-                            ((TextView) MainActivity.this.findViewById(R.id.telemetryData)).setVisibility(View.INVISIBLE);
-                        } catch (Exception e) {
-                            Log.d(TAG, e.getMessage());
-                        }
-                    }
-                });*/
+                myDB.insertRowiBeaconTable(ProtocolName, BeaconName, BeaconUUID, BeaconMajor, (int) distance, Rssi, mTxPowerTMP, myDate);
+                //myDB.insertRowEddystoneTable(ProtocolName, BeaconName, namespaceId, instanceId, (int) distance, Rssi, mTxPowerTMP, myDate);
 
             }
 
@@ -440,6 +307,11 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
                             /*Toast.makeText(getApplicationContext(),
                                     "Click ListItem Number " + position, Toast.LENGTH_LONG)
                                     .show();*/
+                            Log.d("Intent", position + " " + id);
+                            Intent i = new Intent(view.getContext(), ShowBeacons.class);
+                            i.putExtra("position", position);
+                            i.putExtra("id", id);
+                            startActivity(i);
                         }
                     });
 
@@ -477,12 +349,31 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
         }
     }
 
+    public void startBeaconListener() {
+        mBeaconManager = BeaconManager.getInstanceForApplication(this.getApplicationContext());
+        // Detect the main Eddystone-UID frame:
+        mBeaconManager.getBeaconParsers().add(new BeaconParser().
+                setBeaconLayout("s:0-1=feaa,m:2-2=00,p:3-3:-41,i:4-13,i:14-19"));
+        // Detect the telemetry (TLM) frame:
+        mBeaconManager.getBeaconParsers().add(new BeaconParser().
+                setBeaconLayout("x,s:0-1=feaa,m:2-2=20,d:3-3,d:4-5,d:6-7,d:8-11,d:12-15"));
+        // Detect the URL frame:
+        mBeaconManager.getBeaconParsers().add(new BeaconParser().
+                setBeaconLayout("s:0-1=feaa,m:2-2=10,p:3-3:-41,i:4-21v"));
+        //Detecte iBeacon frame
+        mBeaconManager.getBeaconParsers().add(new BeaconParser().
+                setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
+        mBeaconManager.bind(this);
+    }
+
     @Override
     public void onResume() {
         super.onResume();
+        startBeaconListener();
+
 
         String name = "MainActivity";
-        Log.i(TAG, "Setting screen name: " + name);
+        //Log.i(TAG, "Setting screen name: " + name);
         mTracker.setScreenName("Image~" + name);
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
 
@@ -493,16 +384,15 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
         //accelerometr
         mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 
+        //this.recreate();
+
+
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        if (mBeaconManager.isBound(this)) {
-            mBeaconManager.setBackgroundMode(true);
-        }
-        //accelerometr
-        mSensorManager.unregisterListener(this);
+
     }
 
     @Override
@@ -564,7 +454,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
             ay = event.values[1] - gravity[1];
             az = event.values[2] - gravity[2];
 
-            Log.d(TAG, "Accelerometr " + ax + " " + ay + " " + az);
+            //Log.d(TAG, "Accelerometr " + ax + " " + ay + " " + az);
         }
     }
 
