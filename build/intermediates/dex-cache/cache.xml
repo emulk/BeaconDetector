@@ -2,179 +2,165 @@
 <items version="2" >
 
     <item
+        jar="/home/asd/Android/Sdk/extras/android/m2repository/com/android/support/support-annotations/23.0.0/support-annotations-23.0.0.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="990e7f98a7bad86a40b1f0bcfeb039023afd0839">
+        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/pre-dexed/release/support-annotations-23.0.0_909fe816537f4869ae4ee5caad1cbd100575c457.jar" />
+    </item>
+    <item
         jar="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/exploded-aar/com.google.firebase/firebase-analytics/9.0.2/jars/classes.jar"
-        jumboMode="true"
+        jumboMode="false"
         revision="23.0.3"
         sha1="51a11c41a08f099a204e1b8dcc04f27217de50ec">
-        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.firebase-firebase-analytics-9.0.2_6ca2fdb8a5b35838ff1002ab3dce52dab878d69b/classes.dex" />
+        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/pre-dexed/release/com.google.firebase-firebase-analytics-9.0.2_6ca2fdb8a5b35838ff1002ab3dce52dab878d69b.jar" />
     </item>
     <item
         jar="/home/asd/.gradle/caches/modules-2/files-2.1/com.firebase/tubesock/0.0.11/d37cb67277928cf59344b4196af8d9cee1f1a27c/tubesock-0.0.11.jar"
-        jumboMode="true"
+        jumboMode="false"
         revision="23.0.3"
         sha1="d37cb67277928cf59344b4196af8d9cee1f1a27c">
-        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/tubesock-0.0.11_c2ce449d0072867ecb54519685c11b2df9f84ade/classes.dex" />
+        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/pre-dexed/release/tubesock-0.0.11_c2ce449d0072867ecb54519685c11b2df9f84ade.jar" />
     </item>
     <item
         jar="/home/asd/.gradle/caches/modules-2/files-2.1/com.firebase/firebase-client-jvm/2.3.1/4d53b7d6983247af02b8fe7e4228fff555a5e828/firebase-client-jvm-2.3.1.jar"
-        jumboMode="true"
+        jumboMode="false"
         revision="23.0.3"
         sha1="4d53b7d6983247af02b8fe7e4228fff555a5e828">
-        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/firebase-client-jvm-2.3.1_8efed57dabb081b1182d0e6cd54988b8941a5b19/classes.dex" />
+        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/pre-dexed/release/firebase-client-jvm-2.3.1_8efed57dabb081b1182d0e6cd54988b8941a5b19.jar" />
     </item>
     <item
         jar="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/9.0.2/jars/classes.jar"
-        jumboMode="true"
+        jumboMode="false"
         revision="23.0.3"
         sha1="94d9cedd04b124aed044ac71c451a292856d854c">
-        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-base-9.0.2_a20908334a4b2ad6c5412fea60222b7847ba53d5/classes.dex" />
-    </item>
-    <item
-        jar="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/9.0.2/jars/classes.jar"
-        jumboMode="true"
-        revision="23.0.3"
-        sha1="4022261eeea0d92eb2997a68d2c1f084a16abad9">
-        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-basement-9.0.2_f9cdd43a4a20c08de8713b75bb2eabf00778efae/classes.dex" />
-    </item>
-    <item
-        jar="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-appindexing/9.0.2/jars/classes.jar"
-        jumboMode="true"
-        revision="23.0.3"
-        sha1="d900f2a1ff098cac8befe6c023d723e9afb154be">
-        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-appindexing-9.0.2_243aae6e68196834ac91004678bf0025c16f566c/classes.dex" />
-    </item>
-    <item
-        jar="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/exploded-aar/com.google.firebase/firebase-iid/9.0.2/jars/classes.jar"
-        jumboMode="true"
-        revision="23.0.3"
-        sha1="b3d0809a742c5f768c6aa9efc6decd5c1d6cd227">
-        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.firebase-firebase-iid-9.0.2_5d4b4e9751e62445405636368931ce345885a95a/classes.dex" />
-    </item>
-    <item
-        jar="/home/asd/Android/Sdk/extras/android/m2repository/com/android/support/support-annotations/23.0.0/support-annotations-23.0.0.jar"
-        jumboMode="true"
-        revision="23.0.3"
-        sha1="990e7f98a7bad86a40b1f0bcfeb039023afd0839">
-        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/support-annotations-23.0.0_909fe816537f4869ae4ee5caad1cbd100575c457/classes.dex" />
-    </item>
-    <item
-        jar="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
-        jumboMode="true"
-        revision="23.0.3"
-        sha1="f00672107c800b09338a2019b1589f1ea53d9962">
-        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_3857abceb8fed14b018e4548a6d85fd2f32a0263/classes.dex" />
-    </item>
-    <item
-        jar="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.0/jars/classes.jar"
-        jumboMode="true"
-        revision="23.0.3"
-        sha1="4fcf0b1879f8caf497c073e1432d398e9e2988c1">
-        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-appcompat-v7-23.0.0_6dc4b4adada1001019adedc4ab79a819e1f32669/classes.dex" />
-    </item>
-    <item
-        jar="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads-lite/9.0.2/jars/classes.jar"
-        jumboMode="true"
-        revision="23.0.3"
-        sha1="b8e0372ca6dc89ac4fe22b76eeea4f68ece435b8">
-        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-ads-lite-9.0.2_188b0b0f977c002327dda249a1fc11da291d6c63/classes.dex" />
-    </item>
-    <item
-        jar="/home/asd/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-annotations/2.2.2/285cb9c666f0f0f3dd8a1be04e1f457eb7b15113/jackson-annotations-2.2.2.jar"
-        jumboMode="true"
-        revision="23.0.3"
-        sha1="285cb9c666f0f0f3dd8a1be04e1f457eb7b15113">
-        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/jackson-annotations-2.2.2_4b35758c368f6d7c71b3fd801df85fe325229acf/classes.dex" />
-    </item>
-    <item
-        jar="/home/asd/.gradle/caches/modules-2/files-2.1/com.firebase/firebase-client-android/2.3.1/be29b24233711c419ce935aa0a1b12ebc49d1c9a/firebase-client-android-2.3.1.jar"
-        jumboMode="true"
-        revision="23.0.3"
-        sha1="be29b24233711c419ce935aa0a1b12ebc49d1c9a">
-        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/firebase-client-android-2.3.1_c7907f667fb4606d5f8576ac7f8b7652192b062a/classes.dex" />
-    </item>
-    <item
-        jar="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics-impl/9.0.2/jars/classes.jar"
-        jumboMode="true"
-        revision="23.0.3"
-        sha1="6c58c14d15602fea2c50138c73bb107e8b832b62">
-        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-analytics-impl-9.0.2_881515b8a837649506bed598aba9f63bdc50dcd8/classes.dex" />
-    </item>
-    <item
-        jar="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.0/jars/libs/internal_impl-23.0.0.jar"
-        jumboMode="true"
-        revision="23.0.3"
-        sha1="8bd336eeae661e8311330284897ee07f8ebaa297">
-        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-23.0.0_0e818fd6a887b6918f00be0012232a3a1b1b2126/classes.dex" />
-    </item>
-    <item
-        jar="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.0/jars/classes.jar"
-        jumboMode="true"
-        revision="23.0.3"
-        sha1="8413c27b45b7fe61dca4a98159f65e2cee215f5a">
-        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-v4-23.0.0_18753249080ca555fce596e0973b37dbfc125343/classes.dex" />
-    </item>
-    <item
-        jar="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/9.0.2/jars/classes.jar"
-        jumboMode="true"
-        revision="23.0.3"
-        sha1="fe5b47e764869f1076cb9cfe12801ed2ef4e9117">
-        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-analytics-9.0.2_420c84f9517a1cf58ccd8ac3c190b54bd1871a92/classes.dex" />
-    </item>
-    <item
-        jar="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/exploded-aar/com.google.firebase/firebase-analytics-impl/9.0.2/jars/classes.jar"
-        jumboMode="true"
-        revision="23.0.3"
-        sha1="a511c684ea4c2cf31a3377d51e7677cb76696e07">
-        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.firebase-firebase-analytics-impl-9.0.2_1b4c422b9e85fdc006e78a99f8aa69899cab17fa/classes.dex" />
-    </item>
-    <item
-        jar="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/exploded-aar/org.altbeacon/android-beacon-library/2.8.1/jars/classes.jar"
-        jumboMode="true"
-        revision="23.0.3"
-        sha1="d635ba0566039772656378e67a302aa3448f5c29">
-        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/org.altbeacon-android-beacon-library-2.8.1_ca75345ec6ed61adebf152b93593a90debf579f0/classes.dex" />
-    </item>
-    <item
-        jar="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
-        jumboMode="true"
-        revision="23.0.3"
-        sha1="9f648d88c3262458c09fc4dc4f7bf95f2427cfaa">
-        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_29c1a2a6775eff2c385b0cf3734407b6d16f49a8/classes.dex" />
-    </item>
-    <item
-        jar="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-tasks/9.0.2/jars/classes.jar"
-        jumboMode="true"
-        revision="23.0.3"
-        sha1="aec1bc54964a85d851c2c1b1cb7f90f7dbd755ab">
-        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-tasks-9.0.2_dd08d767a28696abce80c1edd62c5a618f345c0a/classes.dex" />
-    </item>
-    <item
-        jar="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/9.0.2/jars/classes.jar"
-        jumboMode="true"
-        revision="23.0.3"
-        sha1="f4fb6981392ca7680d02fd57d26d6124c141d9d9">
-        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-ads-9.0.2_80aa804b17115a9d906d44c1566a77f77c9d72b7/classes.dex" />
+        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/pre-dexed/release/com.google.android.gms-play-services-base-9.0.2_a20908334a4b2ad6c5412fea60222b7847ba53d5.jar" />
     </item>
     <item
         jar="/home/asd/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-core/2.2.2/d20be6a5ddd6f8cfd36ebf6dea329873a1c41f1b/jackson-core-2.2.2.jar"
-        jumboMode="true"
+        jumboMode="false"
         revision="23.0.3"
         sha1="d20be6a5ddd6f8cfd36ebf6dea329873a1c41f1b">
-        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/jackson-core-2.2.2_1a93f06696c094223440bdcb99db9fafb242a616/classes.dex" />
+        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/pre-dexed/release/jackson-core-2.2.2_1a93f06696c094223440bdcb99db9fafb242a616.jar" />
     </item>
     <item
-        jar="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/exploded-aar/com.google.firebase/firebase-common/9.0.2/jars/classes.jar"
-        jumboMode="true"
+        jar="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/exploded-aar/com.google.firebase/firebase-iid/9.0.2/jars/classes.jar"
+        jumboMode="false"
         revision="23.0.3"
-        sha1="9919563cffd8e3732e944d3c437d4b9575a08448">
-        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.firebase-firebase-common-9.0.2_d14f6a40ef87f9982f42bbc6a324eb2414ec2f8d/classes.dex" />
+        sha1="b3d0809a742c5f768c6aa9efc6decd5c1d6cd227">
+        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/pre-dexed/release/com.google.firebase-firebase-iid-9.0.2_5d4b4e9751e62445405636368931ce345885a95a.jar" />
+    </item>
+    <item
+        jar="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/9.0.2/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="4022261eeea0d92eb2997a68d2c1f084a16abad9">
+        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/pre-dexed/release/com.google.android.gms-play-services-basement-9.0.2_f9cdd43a4a20c08de8713b75bb2eabf00778efae.jar" />
+    </item>
+    <item
+        jar="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-appindexing/9.0.2/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="d900f2a1ff098cac8befe6c023d723e9afb154be">
+        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/pre-dexed/release/com.google.android.gms-play-services-appindexing-9.0.2_243aae6e68196834ac91004678bf0025c16f566c.jar" />
+    </item>
+    <item
+        jar="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-tasks/9.0.2/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="aec1bc54964a85d851c2c1b1cb7f90f7dbd755ab">
+        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/pre-dexed/release/com.google.android.gms-play-services-tasks-9.0.2_dd08d767a28696abce80c1edd62c5a618f345c0a.jar" />
+    </item>
+    <item
+        jar="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads-lite/9.0.2/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="b8e0372ca6dc89ac4fe22b76eeea4f68ece435b8">
+        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/pre-dexed/release/com.google.android.gms-play-services-ads-lite-9.0.2_188b0b0f977c002327dda249a1fc11da291d6c63.jar" />
+    </item>
+    <item
+        jar="/home/asd/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-annotations/2.2.2/285cb9c666f0f0f3dd8a1be04e1f457eb7b15113/jackson-annotations-2.2.2.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="285cb9c666f0f0f3dd8a1be04e1f457eb7b15113">
+        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/pre-dexed/release/jackson-annotations-2.2.2_4b35758c368f6d7c71b3fd801df85fe325229acf.jar" />
+    </item>
+    <item
+        jar="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/exploded-aar/com.google.firebase/firebase-analytics-impl/9.0.2/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="a511c684ea4c2cf31a3377d51e7677cb76696e07">
+        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/pre-dexed/release/com.google.firebase-firebase-analytics-impl-9.0.2_1b4c422b9e85fdc006e78a99f8aa69899cab17fa.jar" />
+    </item>
+    <item
+        jar="/home/asd/.gradle/caches/modules-2/files-2.1/com.firebase/firebase-client-android/2.3.1/be29b24233711c419ce935aa0a1b12ebc49d1c9a/firebase-client-android-2.3.1.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="be29b24233711c419ce935aa0a1b12ebc49d1c9a">
+        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/pre-dexed/release/firebase-client-android-2.3.1_c7907f667fb4606d5f8576ac7f8b7652192b062a.jar" />
+    </item>
+    <item
+        jar="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics-impl/9.0.2/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="6c58c14d15602fea2c50138c73bb107e8b832b62">
+        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/pre-dexed/release/com.google.android.gms-play-services-analytics-impl-9.0.2_881515b8a837649506bed598aba9f63bdc50dcd8.jar" />
+    </item>
+    <item
+        jar="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="8413c27b45b7fe61dca4a98159f65e2cee215f5a">
+        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/pre-dexed/release/com.android.support-support-v4-23.0.0_18753249080ca555fce596e0973b37dbfc125343.jar" />
+    </item>
+    <item
+        jar="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.0/jars/libs/internal_impl-23.0.0.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="8bd336eeae661e8311330284897ee07f8ebaa297">
+        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/pre-dexed/release/internal_impl-23.0.0_0e818fd6a887b6918f00be0012232a3a1b1b2126.jar" />
+    </item>
+    <item
+        jar="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/9.0.2/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="fe5b47e764869f1076cb9cfe12801ed2ef4e9117">
+        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/pre-dexed/release/com.google.android.gms-play-services-analytics-9.0.2_420c84f9517a1cf58ccd8ac3c190b54bd1871a92.jar" />
+    </item>
+    <item
+        jar="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/exploded-aar/org.altbeacon/android-beacon-library/2.8.1/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="d635ba0566039772656378e67a302aa3448f5c29">
+        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/pre-dexed/release/org.altbeacon-android-beacon-library-2.8.1_ca75345ec6ed61adebf152b93593a90debf579f0.jar" />
+    </item>
+    <item
+        jar="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/9.0.2/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="f4fb6981392ca7680d02fd57d26d6124c141d9d9">
+        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/pre-dexed/release/com.google.android.gms-play-services-ads-9.0.2_80aa804b17115a9d906d44c1566a77f77c9d72b7.jar" />
+    </item>
+    <item
+        jar="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="4fcf0b1879f8caf497c073e1432d398e9e2988c1">
+        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/pre-dexed/release/com.android.support-appcompat-v7-23.0.0_6dc4b4adada1001019adedc4ab79a819e1f32669.jar" />
     </item>
     <item
         jar="/home/asd/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-databind/2.2.2/3c8f6018eaa72d43b261181e801e6f8676c16ef6/jackson-databind-2.2.2.jar"
-        jumboMode="true"
+        jumboMode="false"
         revision="23.0.3"
         sha1="3c8f6018eaa72d43b261181e801e6f8676c16ef6">
-        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/jackson-databind-2.2.2_394b9bd212e1c954937fc9fa78486d5c19099fab/classes.dex" />
+        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/pre-dexed/release/jackson-databind-2.2.2_394b9bd212e1c954937fc9fa78486d5c19099fab.jar" />
+    </item>
+    <item
+        jar="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/exploded-aar/com.google.firebase/firebase-common/9.0.2/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="9919563cffd8e3732e944d3c437d4b9575a08448">
+        <dex dex="/home/asd/StudioProjects/BeaconDetector/app/build/intermediates/pre-dexed/release/com.google.firebase-firebase-common-9.0.2_d14f6a40ef87f9982f42bbc6a324eb2414ec2f8d.jar" />
     </item>
 
 </items>
