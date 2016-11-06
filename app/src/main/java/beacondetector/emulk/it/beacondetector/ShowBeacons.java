@@ -1,6 +1,7 @@
 package beacondetector.emulk.it.beacondetector;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,15 +26,18 @@ import java.util.List;
  */
 public class ShowBeacons extends Activity implements AdapterView.OnItemSelectedListener {
 
-
     private static final String TAG = "ShowBeacons";
+
+    String protocol = "eddystone";
+    Spinner spinner;
+    List<String> categories = new ArrayList<String>();
+
+    ShowBeaconAdapter adapter;
     private BeaconDB myDB;
     private ArrayList<BeaconStructure> results = new ArrayList<BeaconStructure>();
-    private String chosenProtocol = "Eddystone";
     private Cursor allRows = null;
     private ListView listViewEddystone;
     private Tracker mTracker;
-
     private BeaconStructure beaconView;
 
     /**
@@ -48,12 +52,14 @@ public class ShowBeacons extends Activity implements AdapterView.OnItemSelectedL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         //full screen activity
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_show_beacons);
+
+        listViewEddystone = (ListView) findViewById(R.id.listView);
+        listViewEddystone.setClickable(false);
 
 
         //[[Google Analytics ]]
@@ -68,47 +74,83 @@ public class ShowBeacons extends Activity implements AdapterView.OnItemSelectedL
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
-
-        Spinner spinner = (Spinner) findViewById(R.id.beaconProtocol);
-        // Spinner click listener
-        spinner.setOnItemSelectedListener(this);
-        // Spinner Drop down elements
-        List<String> categories = new ArrayList<String>();
-        categories.add("Eddystone");
-        categories.add("iBeacon");
-
-        // Creating adapter for spinner
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
-
-        // Drop down layout style - list view with radio button
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        // attaching data adapter to spinner
-        spinner.setAdapter(dataAdapter);
-
-
-        listViewEddystone = (ListView) findViewById(R.id.listView);
-        listViewEddystone.setClickable(false);
+        Intent intent = getIntent();
+        protocol = intent.getStringExtra(MainActivity.EXTRA_MESSAGE).toLowerCase().trim();
 
 
         //creo un istanza del DB
         openDB();
 
-        showResults();
+        //clean db: pulisce i db lasciandoci soltanto le ultime 100 righe
+        myDB.CleanDb();
 
+        if (protocol.equalsIgnoreCase("Eddystone")) {
+            categories.add("Eddystone");
+            categories.add("iBeacon");
+        } else {
+            categories.add("iBeacon");
+            categories.add("Eddystone");
+
+        }
+
+
+        protocolList();
+
+
+        showResults();
 
     }
 
-    public void showResults() {
-        results.clear();
-        listViewEddystone.setAdapter(null);
 
+    public void protocolList() {
+        try {
+            spinner = (Spinner) findViewById(R.id.beaconProtocol);
+            // Spinner click listener
+            spinner.setOnItemSelectedListener(this);
+            // Spinner Drop down elements
+
+
+            // Creating adapter for spinner
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
+
+            // Drop down layout style - list view with radio button
+            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            dataAdapter.notifyDataSetChanged();
+
+            // attaching data adapter to spinner
+            spinner.setAdapter(dataAdapter);
+
+        } catch (Exception e) {
+            Log.d(TAG, e.getMessage());
+        }
+
+    }
+
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        // On selecting a spinner item
+        String item = parent.getItemAtPosition(position).toString();
+        protocol = item;
+        showResults();
+
+        // Showing selected spinner item
+        Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
+    }
+
+    public void onNothingSelected(AdapterView<?> arg0) {
+        // TODO Auto-generated method stub
+    }
+
+    /**
+     * La funzione prende tutti i record dai rispoettivi db e ne mostra soltanto 100, gli altri li elimina
+     */
+    public void showResults() {
         //visualizzo a video tutti i beacon che ho visto
         try {
 
-            if (chosenProtocol.equalsIgnoreCase("Eddystone")) {
-                allRows = myDB.LastQueryEddystone();
+            results.clear();
 
+            if (protocol.equalsIgnoreCase("eddystone")) {
+                allRows = myDB.LastQueryEddystone();
 
                 if (allRows != null && allRows.getCount() != 0) {
                     allRows.moveToFirst();
@@ -131,7 +173,7 @@ public class ShowBeacons extends Activity implements AdapterView.OnItemSelectedL
                     // notifyDataSetChanged();
 
                 }
-            } else {
+            } else if (protocol.equalsIgnoreCase("ibeacon")) {
 
                 allRows = myDB.LastQueryiBeacon();
 
@@ -153,39 +195,57 @@ public class ShowBeacons extends Activity implements AdapterView.OnItemSelectedL
                         beaconView.setLastAliveOn(allRows.getString(BeaconDB.Col_LastAliveOn));
                         results.add(beaconView);
 
+
                     } while (allRows.moveToNext());
                 }
 
             }
+
+
+            //visualizzo a video tutti i beacon che ho visto
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    try {
+
+                        adapter = new ShowBeaconAdapter(ShowBeacons.this, results);
+                        adapter.notifyDataSetChanged();
+                        listViewEddystone.setAdapter(adapter);
+                        adapter.notifyDataSetChanged();
+
+                    } catch (Exception e) {
+                        Log.d(TAG, e.getMessage());
+                    }
+
+                }
+            });
+
+
         } catch (Exception e) {
             Log.d(TAG, e.getMessage());
         }
 
-        listViewEddystone.setAdapter(new BeaconAdapter(ShowBeacons.this, results));
 
     }
 
-
+    /*
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         // On selecting a spinner item
         String item = parent.getItemAtPosition(position).toString();
-        chosenProtocol = item;
-        showResults();
+        //protocol = item;
+        //showResults();
 
 
         // Showing selected spinner item
-        Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
+        //Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
     }
-
+*//*
     public void onNothingSelected(AdapterView<?> arg0) {
-        // TODO Auto-generated method stub
     }
-
+*/
 
     @Override
     public void onStart() {
         super.onStart();
-
     }
 
     @Override
@@ -200,7 +260,6 @@ public class ShowBeacons extends Activity implements AdapterView.OnItemSelectedL
         super.onPause();
 
     }
-
 
     @Override
     public void onStop() {

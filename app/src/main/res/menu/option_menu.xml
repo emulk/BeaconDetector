@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/eddyston"
+        android:icon="@drawable/ic_menu_manage"
+        android:title="Eddystone"/>
+    <item
+        android:icon="@drawable/ic_menu_manage"
+        android:id="@+id/ibeacon"
+        android:title="iBeacon"/>
+    <item
+        android:id="@+id/trilateration"
+        android:title="Trilateration"/>
+    <item
+        android:id="@+id/indoor"
+        android:title="Indoor Location"/>
+
+
+</menu>

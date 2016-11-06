@@ -2,17 +2,21 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="beacondetector.emulk.it.beacondetector" >
 
+    <!-- *****************************Permessi per il Bluetooth ***************************************-->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
+    <!--******************************* Accelerometro *************************************** -->
     <uses-feature android:name="android.hardware.sensor.accelerometer" />
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
+    <!-- ************************** Permessi per l'esame disistemi mobili :: Ricordarsi di toglierli ************************** -->
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
 
 
     <application
@@ -29,17 +33,20 @@
             android:theme="@style/FullscreenTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!--
- ATTENTION: This was auto-generated to add Google Play services to your project for
-     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
-        -->
         <activity
             android:name=".ShowBeacons"
             android:label="@string/showBeacons" >
+        </activity>
+        <activity
+            android:name=".Trilateration"
+            android:label="@string/trilateration" >
+        </activity>
+        <activity
+            android:name=".IndoorLocation"
+            android:label="@string/indoor" >
         </activity>
 
         <meta-data

@@ -9,13 +9,14 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by asd on 15/07/16.
  */
 public class BeaconAdapter extends BaseAdapter {
     private static final String TAG = "BeaconAdapter";
-    private static ArrayList<BeaconStructure> beaconArrayList;
+    private static ArrayList<BeaconStructure> beaconArrayList = new ArrayList<>();
 
     private LayoutInflater mInflater = null;
 
@@ -31,6 +32,13 @@ public class BeaconAdapter extends BaseAdapter {
     public Object getItem(int position) {
         return beaconArrayList.get(position);
     }
+
+    /*
+    @Override
+    public boolean isEnabled(int position) {
+        return false;
+    }
+    */
 
     public long getItemId(int position) {
         return position;
@@ -87,6 +95,7 @@ public class BeaconAdapter extends BaseAdapter {
 
         } catch (Exception e) {
             Log.d(TAG, e.getMessage());
+            Log.d(TAG, "Beacon Adapter");
         }
         return convertView;
     }

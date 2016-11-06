@@ -1,11 +1,11 @@
 package beacondetector.emulk.it.beacondetector;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -16,11 +16,13 @@ import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
@@ -45,21 +47,19 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 
-/**
- * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
- */
 public class MainActivity extends AppCompatActivity implements BeaconConsumer, RangeNotifier, SensorEventListener {
+
+    public final static String EXTRA_MESSAGE = "beacondetector.emulk.it.beacondetector.MESSAGE";
     private static final String TAG = "MainActivity";
+
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
     final double alpha = 0.8;
-    double ax, ay, az;
+    int ax, ay, az, tempAx, tempAy, tempAz;
+    String protocol = null;
     private ArrayList<BeaconStructure> results = new ArrayList<BeaconStructure>();
     /*DB*/
     private BeaconDB myDB;
-    private Cursor cursorlast;
-    private TextView urlLink;
-    private ListView lv1;
+    private ListView genericLV;
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
     private Tracker mTracker;
@@ -82,12 +82,6 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
     private double distance = 0;
     private int Rssi = 0;
     private BeaconManager mBeaconManager;
-
-
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
     private GoogleApiClient client;
 
     @Override
@@ -99,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
 
         setContentView(R.layout.activity_main);
 
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             // Android M Permission check
             if (this.checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -107,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
                 builder.setMessage("Please grant location access so this app can detect beacons.");
                 builder.setPositiveButton(android.R.string.ok, null);
                 builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @TargetApi(23)
                     @Override
                     public void onDismiss(DialogInterface dialog) {
                         requestPermissions(new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_COARSE_LOCATION);
@@ -116,35 +112,33 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
             }
         }
 
-        lv1 = (ListView) findViewById(R.id.listView);
+        genericLV = (ListView) findViewById(R.id.listView);
 
+        //************************************ accelerometro **********************************************+
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        //[[Google Analytics ]]
+
+        //******************************* [ [Google Analytics ] ] ************************************
         // Obtain the shared Tracker instance.
         AnalyticsApplication application = (AnalyticsApplication) getApplication();
         mTracker = application.getDefaultTracker();
         //[[Endo Google Analytics
 
-        //ca-app-pub-4209540176643828/4024024590
+        //************************ adMob chiave pubblica: ca-app-pub-4209540176643828/4024024590 ***************************************************
         MobileAds.initialize(getApplicationContext(), "ca-app-pub-4209540176643828/4024024590");
         AdView mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
+        //attivo il bluetooth
+        activateBluetooth();
+
         //creo un istanza del DB
         openDB();
 
-
-        //se il bluetooth non è attivo, lo attivo
-        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (!mBluetoothAdapter.isEnabled()) {
-            mBluetoothAdapter.enable();
-            Toast.makeText(getApplicationContext(), "BlueTooth enable", Toast.LENGTH_LONG).show();
-            //Log.d(TAG, "BlueTooth enable");
-        }
-
-        //start beacon listener
+        /**
+         * start beacon listener
+         */
         startBeaconListener();
 
 
@@ -154,6 +148,62 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
     }
 
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.option_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        Intent intent = new Intent(this, ShowBeacons.class);
+
+        switch (id) {
+            case R.id.eddyston:
+                protocol = "eddystone";
+                intent.putExtra(EXTRA_MESSAGE, protocol);
+                startActivity(intent);
+                return true;
+            case R.id.ibeacon:
+                protocol = "ibeacon";
+                intent.putExtra(EXTRA_MESSAGE, protocol);
+                startActivity(intent);
+                return true;
+            case R.id.trilateration:
+                intent = new Intent(this, Trilateration.class);
+                startActivity(intent);
+                return true;
+            case R.id.indoor:
+                intent = new Intent(this, IndoorLocation.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
+
+        }
+    }
+
+    /***
+     * Attiva il bluetotth se non è attivo
+     */
+    public void activateBluetooth() {
+
+        //se il bluetooth non è attivo, lo attivo
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (!mBluetoothAdapter.isEnabled()) {
+            mBluetoothAdapter.enable();
+            Toast.makeText(getApplicationContext(), "BlueTooth enable", Toast.LENGTH_LONG).show();
+            //Log.d(TAG, "BlueTooth enable");
+        }
+
+    }
+
+    /**
+     *
+     */
     @Override
     public void onBeaconServiceConnect() {
         Region region = new Region("all-beacons-region", null, null, null);
@@ -165,6 +215,22 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
         mBeaconManager.setRangeNotifier(this);
     }
 
+    /**
+     * @param ax
+     * @param ay
+     * @param az
+     */
+    public void accelerometrChange(int ax, int ay, int az) {
+        tempAx = ax;
+        tempAy = ay;
+        tempAz = az;
+
+    }
+
+    /**
+     * @param beacons
+     * @param region
+     */
     @Override
     public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
         results.clear();
@@ -178,21 +244,17 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
 
                 // Do we have telemetry data?
                 if (beacon.getExtraDataFields().size() > 0) {
+
                     long telemetryVersion = beacon.getExtraDataFields().get(0);
                     long batteryMilliVolts = beacon.getExtraDataFields().get(1);
                     long pduCount = beacon.getExtraDataFields().get(3);
                     long uptime = beacon.getExtraDataFields().get(4);
 
-                    /*Log.d(TAG, "The above beacon is sending telemetry version " + telemetryVersion +
-                            ", has been up for : " + uptime + " seconds" +
-                            ", has a battery level of " + batteryMilliVolts + " mV" +
-                            ", and has transmitted " + pduCount + " advertisements.");*/
                     telemetryData = "Yes";
 
                 } else {
                     telemetryData = "No";
                 }
-
 
                 final Identifier instanceIdTMP = beacon.getId2();
                 BeaconName = beacon.getBluetoothName();
@@ -207,19 +269,12 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
                 mTxPowerTMP = beacon.getTxPower();
                 //prendo gli ultimi valori
 
-                /*
-                cursorlast = myDB.LastQueryEddystone();
-                if (cursorlast.moveToLast()) {
-                    long id = cursorlast.getLong(BeaconDB.Col_ROWID);
-                    String namespaceDB = cursorlast.getString(BeaconDB.Col_NameSpace);
-                    int distanceDB = cursorlast.getInt(BeaconDB.Col_Distance);
-                    Log.d(TAG, id + " " + namespaceDB + " " + distanceDB);
-                }*/
+                if (ax != tempAx || ay != tempAy || az != tempAz) {
+                    /*Inserisco una riga nella tabella eddystone, nel db*/
+                    myDB.insertRowEddystoneTable(ProtocolName, BeaconName, namespaceId, instanceId, (int) distance, Rssi, mTxPowerTMP, myDate);
+                    accelerometrChange(ax, ay, az);
+                }
 
-
-
-                /*Inserisco una riga nella tabella eddystone, nel db*/
-                myDB.insertRowEddystoneTable(ProtocolName, BeaconName, namespaceId, instanceId, (int) distance, Rssi, mTxPowerTMP, myDate);
                 BeaconStructure beaconView = new BeaconStructure();
                 beaconView.setNamespaceLayout("NameSpace");
                 beaconView.setInstanceLayout("Instance");
@@ -256,7 +311,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
                 if (!url.startsWith("http://") && !url.startsWith("https://")) {
                     url = "http://" + url;
                 }
-               /* Log.d(TAG, "I see a beacon transmitting a url: " + url +
+                /* Log.d(TAG, "I see a beacon transmitting a url: " + url +
                         " approximately " + beacon.getDistance() + " meters away.");*/
 
 
@@ -277,9 +332,6 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
                 //bluetoothName emulkBeacon bluetoothAdress DE:F0:70:9E:E9:B8 datafields []
                 // ExtraDataFiels[] id1 ebefd083-70a2-47c8-9837-e7b5634df524 id2 10 id3 1 manufacter 76
                 //battery level beacon.getDataFields().get(0)
-               /* Log.d(TAG, "bluetoothName " + beacon.getBluetoothName() + " bluetoothAdress " + beacon.getBluetoothAddress()
-                        + " datafields " + beacon.getDataFields() + " ExtraDataFiels" + beacon.getExtraDataFields() + " id1 " + beacon.getId1()
-                        + " id2 " + beacon.getId2() + " id3 " + beacon.getId3() + " manufacter " + beacon.getManufacturer());*/
 
                 BeaconName = beacon.getBluetoothName();
                 BeaconUUID = (beacon.getId1() + "").toUpperCase();
@@ -310,29 +362,28 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
                 results.add(beaconView);
 
 
-                myDB.insertRowiBeaconTable(ProtocolName, BeaconName, BeaconUUID, BeaconMajor, (int) distance, Rssi, mTxPowerTMP, myDate);
-                //myDB.insertRowEddystoneTable(ProtocolName, BeaconName, namespaceId, instanceId, (int) distance, Rssi, mTxPowerTMP, myDate);
-
+                if (ax != tempAx || ay != tempAy || az != tempAz) {
+                    myDB.insertRowiBeaconTable(ProtocolName, BeaconName, BeaconUUID, BeaconMajor, (int) distance, Rssi, mTxPowerTMP, myDate);
+                    //myDB.insertRowEddystoneTable(ProtocolName, BeaconName, namespaceId, instanceId, (int) distance, Rssi, mTxPowerTMP, myDate);
+                    //Log.d(TAG, "Inserimento nel table iBeacon "+ax+" "+ay+" "+az);
+                    accelerometrChange(ax, ay, az);
+                }
             }
-
         }
 
         //visualizzo a video tutti i beacon che ho visto
         runOnUiThread(new Runnable() {
             public void run() {
                 try {
-                    lv1.setAdapter(new BeaconAdapter(MainActivity.this, results));
-                    lv1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    genericLV.setAdapter(new BeaconAdapter(MainActivity.this, results));
+                    genericLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view,
                                                 int position, long id) {
-                            /*Toast.makeText(getApplicationContext(),
-                                    "Click ListItem Number " + position, Toast.LENGTH_LONG)
-                                    .show();*/
-                            Log.d("Intent", position + " " + id);
                             Intent i = new Intent(view.getContext(), ShowBeacons.class);
-                            i.putExtra("position", position);
-                            i.putExtra("id", id);
+                            BeaconStructure protocolName = (BeaconStructure) genericLV.getItemAtPosition(position);
+                            protocol = protocolName.getBeaconProtocol();
+                            i.putExtra(EXTRA_MESSAGE, protocol);
                             startActivity(i);
                         }
                     });
@@ -342,12 +393,13 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
                     Log.d(TAG, e.getMessage());
                 }
 
-
             }
         });
     }
 
-
+    /**
+     *
+     */
     @Override
     public void onStart() {
         super.onStart();
@@ -371,6 +423,9 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
         }
     }
 
+    /**
+     *
+     */
     public void startBeaconListener() {
         mBeaconManager = BeaconManager.getInstanceForApplication(this.getApplicationContext());
         // Detect the main Eddystone-UID frame:
@@ -388,14 +443,18 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
         mBeaconManager.bind(this);
     }
 
+    /**
+     *
+     */
     @Override
     public void onResume() {
         super.onResume();
+
+        activateBluetooth();
+
         startBeaconListener();
 
-
         String name = "MainActivity";
-        //Log.i(TAG, "Setting screen name: " + name);
         mTracker.setScreenName("Image~" + name);
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
 
@@ -406,17 +465,20 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
         //accelerometr
         mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 
-        //this.recreate();
-
-
     }
 
+    /**
+     *
+     */
     @Override
     public void onPause() {
         super.onPause();
 
     }
 
+    /**
+     *
+     */
     @Override
     public void onStop() {
         super.onStop();
@@ -440,6 +502,9 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
         client.disconnect();
     }
 
+    /**
+     *
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -462,9 +527,11 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
 
+    /**
+     * @param event
+     */
     public void onSensorChanged(SensorEvent event) {
         double gravity[] = new double[3];
-
 
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             // Isolate the force of gravity with the low-pass filter.
@@ -472,15 +539,22 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
             gravity[1] = alpha * gravity[1] + (1 - alpha) * event.values[1];
             gravity[2] = alpha * gravity[2] + (1 - alpha) * event.values[2];
 
-            ax = event.values[0] - gravity[0];
-            ay = event.values[1] - gravity[1];
-            az = event.values[2] - gravity[2];
+            double tax = event.values[0] - gravity[0];
+            double tay = event.values[1] - gravity[1];
+            double taz = event.values[2] - gravity[2];
 
-            //Log.d(TAG, "Accelerometr " + ax + " " + ay + " " + az);
+            ax = (int) tax;
+            ay = (int) tay;
+            az = (int) taz;
+            // Log.d(TAG, "Accelerometr " + ax + " " + ay + " " + az);
         }
     }
 
-
+    /**
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
@@ -506,6 +580,4 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
             }
         }
     }
-
-
 }

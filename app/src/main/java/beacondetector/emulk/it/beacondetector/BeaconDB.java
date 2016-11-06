@@ -69,6 +69,8 @@ public class BeaconDB {
             TxPower,
             LastAlive
     };
+
+
     /*per il debug, mi indica l'attività in esecuzione*/
     private static final String TAG = "BeaconDB";
 
@@ -189,7 +191,6 @@ public class BeaconDB {
         return db.delete(dataBaseTable, where, null) != 0;
     }
 
-
     /*Restituisce tutte le rige della tabella eddystone */
     public Cursor LastQueryEddystone() {
         //in ordine discendente, lultimo beacon lo faccio vedere per primo
@@ -197,7 +198,6 @@ public class BeaconDB {
         String limit = "100";
         Cursor cursorlast = db.query(true, DATABASE_TABLEEDDYSTONE, ALL_KEYSEDDYSTONE, null,
                 null, null, null, orderBy, limit);
-
         if (cursorlast.moveToFirst() == cursorlast.moveToLast()) {
             cursorlast.moveToFirst();
             return cursorlast;
@@ -205,7 +205,6 @@ public class BeaconDB {
             cursorlast.moveToLast();
             return cursorlast;
         }
-
     }
 
     public static final String[] ALL_KEYSEDDYSTONEDISTINCT = new String[]{
@@ -217,7 +216,13 @@ public class BeaconDB {
 
     };
 
-    // Return all data in the database.
+    public static final String[] ALL_KEYSEDDYSTONEDISTINCTID = new String[]{
+            NameSpace,
+            Instance
+
+    };
+
+    // ritorna le ultime 100 righe della tabella Eddystone
     public Cursor getAllEddystonRows() {
         String where = null;
         String limit = "100";
@@ -227,6 +232,20 @@ public class BeaconDB {
             c.moveToFirst();
         }
         return c;
+    }
+
+    // ritorna i namespace univoci della tabella eddystone
+    public Cursor getDistinctEddystonRows() {
+        String where = null;
+        Cursor cursorlast = db.query(true, DATABASE_TABLEEDDYSTONE, ALL_KEYSEDDYSTONEDISTINCTID, null, null, null,
+                null, null,null);
+        if (cursorlast.moveToFirst() == cursorlast.moveToLast()) {
+            cursorlast.moveToFirst();
+            return cursorlast;
+        } else {
+            cursorlast.moveToLast();
+            return cursorlast;
+        }
     }
 
     /*Restituisce l'ultima riga della tabella eddystone url*/
@@ -244,16 +263,12 @@ public class BeaconDB {
 
     }
 
-
-
-
-    /*Restituisce l'ultima riga della tabella iBeacon*/
+    /*Restituisce le ultime 100 righe della tabella iBeacon*/
     public Cursor LastQueryiBeacon() {
         String orderBy = "LastAlive DESC";
         String limit = "100";
         Cursor cursorlast = db.query(true, DATABASE_TABLEiBEACON, ALL_KEYSiBEACON, null,
                 null, null, null, orderBy, limit);
-
         if (cursorlast.moveToFirst() == cursorlast.moveToLast()) {
             cursorlast.moveToFirst();
             return cursorlast;
@@ -261,10 +276,32 @@ public class BeaconDB {
             cursorlast.moveToLast();
             return cursorlast;
         }
-
     }
 
+    /*Restituisce le ultime 100 righe della tabella iBeacon*/
+    public Cursor getDistinctiBeaconsRows() {
+        Cursor cursorlast = db.query(true, DATABASE_TABLEiBEACON, ALL_KEYSEDDYSTONEDISTINCTID, null,
+                null, null, null, null, null);
+        if (cursorlast.moveToFirst() == cursorlast.moveToLast()) {
+            cursorlast.moveToFirst();
+            return cursorlast;
+        } else {
+            cursorlast.moveToLast();
+            return cursorlast;
+        }
+    }
 
+    //PULISCE i db lasciandoci soltanto le ultime 100 righe inserite
+    public void CleanDb(){
+        db.delete(DATABASE_TABLEiBEACON,
+                "LastAlive NOT IN (SELECT LastAlive FROM " + DATABASE_TABLEiBEACON + " ORDER BY LastAlive DESC LIMIT 100)",
+                null);
+
+        db.delete(DATABASE_TABLEEDDYSTONE,
+                "LastAlive NOT IN (SELECT LastAlive FROM " + DATABASE_TABLEEDDYSTONE + " ORDER BY LastAlive DESC LIMIT 100)",
+                null);
+
+    }
 
     // ///////////////////////////////////////////////////////////////////
     // Private Helper Classes:
