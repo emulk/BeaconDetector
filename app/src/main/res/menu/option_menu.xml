@@ -15,6 +15,9 @@
     <item
         android:id="@+id/indoor"
         android:title="Indoor Location"/>
+    <item
+        android:id="@+id/targetedAD"
+        android:title="Targetd Advertising"/>
 
 
 </menu>

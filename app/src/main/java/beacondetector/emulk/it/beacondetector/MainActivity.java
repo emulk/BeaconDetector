@@ -179,6 +179,10 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
                 intent = new Intent(this, IndoorLocation.class);
                 startActivity(intent);
                 return true;
+            case R.id.targetedAD:
+                intent = new Intent(this, TargetedAD.class);
+                startActivity(intent);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
 

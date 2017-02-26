@@ -16,7 +16,7 @@
         jumboMode="true"
         optimize="true"
         revision="24.0.1"
-        sha1="f188d95fd51c7b8a609b6951cc968867f6d14285">
+        sha1="b8acb99a8e97bf2d3f7b5b782a5e3fc0108c62db">
         <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_267f9ddf07bd869e43d790a54207644340d1dece/classes.dex" />
     </item>
     <item
@@ -178,7 +178,7 @@
         jumboMode="true"
         optimize="true"
         revision="24.0.1"
-        sha1="0076af09366e790d9127db69a566032ab845e961">
+        sha1="da237c96e0be1337725192d73166c5a8ab47d082">
         <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_7010f6b3b686345cbf562f501f33299c78c92458/classes.dex" />
     </item>
     <item
