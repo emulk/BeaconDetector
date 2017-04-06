@@ -1,41 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="fill_parent"
+    android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-   >
+    android:orientation="vertical">
 
 
     <EditText
+        android:id="@+id/jsonUrl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:text="Insert Json Url"
-        android:ems="10"
-        android:id="@+id/jsonUrl"
-        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="72dp" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:ems="10"
+        android:hint="Insert Json Url"
+        android:inputType="textPersonName" />
 
     <Button
-        android:text="Get Json"
+        android:id="@+id/getJson"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/getJson"
         android:layout_below="@+id/jsonUrl"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:text="Get Json" />
 
     <TextView
-        android:text="Json Data"
+        android:id="@+id/sold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/jsonData"
-        android:textStyle="bold"
-        android:textSize="13dp"
-        android:layout_marginTop="26dp"
-        android:layout_below="@+id/getJson"
         android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true" />
+        android:layout_below="@+id/getJson"
+        android:layout_toStartOf="@+id/getJson"
+        android:text="prob sold"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:id="@+id/maleSold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/sold"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/sold"
+        android:text="prob male sold" />
+
+    <TextView
+        android:id="@+id/femaleSold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/maleSold"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/maleSold"
+        android:text="prob female sold" />
+
+
+    <TextView
+        android:id="@+id/happySold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/femaleSold"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/femaleSold"
+        android:text="prob happy sold" />
+
+    <TextView
+        android:id="@+id/sadSold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/happySold"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/happySold"
+        android:text="prob sad sold" />
+
 
 </RelativeLayout>
