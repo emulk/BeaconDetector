@@ -12,15 +12,6 @@
     </item>
     <item
         is-multidex="true"
-        jar="/root/.android/build-cache/1b356d55fe9097a35ac8874caf013b37b1fd93f1/output/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.0"
-        sha1="94bc1dfb84dcc8b6f6f8f7cc726d7b2dd39c1574">
-        <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_131400bd7f4c8fc487a55687e5e9c4808921d526/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="/root/.gradle/caches/modules-2/files-2.1/com.firebase/tubesock/0.0.11/d37cb67277928cf59344b4196af8d9cee1f1a27c/tubesock-0.0.11.jar"
         jumboMode="true"
         optimize="true"
@@ -36,6 +27,24 @@
         revision="25.0.0"
         sha1="8a36d229011e75f0caef408e1adf0d3fd4d94e02">
         <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_c3f416b8325ff95bb6bd806d96777eebcb9f8af4/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/root/.android/build-cache/471d5c475b63f1e01fe8263ac4cd2482e98ee584/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="94bc1dfb84dcc8b6f6f8f7cc726d7b2dd39c1574">
+        <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_9624139e5f723a1a8b8352a547b030f8dd218661/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/root/.android/build-cache/a383d80d63d38755d80b720e2e395ee0ddb6563f/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="d5c731fc64c03dfe04d51134955b483551c35849">
+        <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_05e1f0ab89c9dc2f3e3b9531d01c0d006999b21c/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -57,30 +66,30 @@
     </item>
     <item
         is-multidex="true"
-        jar="/root/.android/build-cache/8a75699264f9516633082aae87106c777b136f2d/output/jars/classes.jar"
+        jar="/root/.android/build-cache/56ab8463430e8031ba5e32a2b49639d70bd1ab1a/output/jars/classes.jar"
         jumboMode="true"
         optimize="true"
         revision="25.0.0"
-        sha1="9c4c3bc902450c39ed54de170db4fb12aea20a35">
-        <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_9934cdfe938c04fb62d37447396d5154543082f9/classes.dex" />
+        sha1="09b462bbcb77650284bd6614f1a32f360ef369f8">
+        <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_43afa622396ae3d4c653e2a9c6ae7322b424c87d/classes.dex" />
     </item>
     <item
         is-multidex="true"
-        jar="/root/.android/build-cache/209a21e434ff77d0b6b6752401c14fa6a36b9638/output/jars/classes.jar"
+        jar="/root/.android/build-cache/56ab8463430e8031ba5e32a2b49639d70bd1ab1a/output/jars/libs/internal_impl-24.2.1.jar"
         jumboMode="true"
         optimize="true"
         revision="25.0.0"
-        sha1="7521486d9bfd2cd9e756e0cf75ed7d97f2ce2d3b">
-        <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_a4a18c8d0ae07278426ff503fc20b188ac2d3e8b/classes.dex" />
+        sha1="fbf8da429efd5ad21e02e3e5ecaa1efc4167878d">
+        <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-24.2.1_e6461436b760483abfc91b038ff04c047783f13b/classes.dex" />
     </item>
     <item
         is-multidex="true"
-        jar="/root/.android/build-cache/9176729ef3534c40eb265f22e08a21b330053ba1/output/jars/classes.jar"
+        jar="/root/.android/build-cache/61478c28c6c3435c03e4bc74334467cb0f1379c1/output/jars/libs/internal_impl-24.2.1.jar"
         jumboMode="true"
         optimize="true"
         revision="25.0.0"
-        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
-        <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_f7e7489476a9075a723da0a0c1b12d365358f84d/classes.dex" />
+        sha1="935a969265b2a166b2d20415423f5f6e90fe16e0">
+        <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-24.2.1_b2bd3a88500a9b9c73ab733447d17c05590e1612/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -120,6 +129,15 @@
     </item>
     <item
         is-multidex="true"
+        jar="/root/.android/build-cache/6584bd6bfc94cd6ac34a004e70861416adc0aac0/output/jars/libs/internal_impl-24.2.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="867dad63c33388ff8c7644b236579355036d075f">
+        <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-24.2.1_e44c1767ba0cc55ca905adb5f9cddd742752e730/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="/root/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-annotations/2.2.2/285cb9c666f0f0f3dd8a1be04e1f457eb7b15113/jackson-annotations-2.2.2.jar"
         jumboMode="true"
         optimize="true"
@@ -129,12 +147,21 @@
     </item>
     <item
         is-multidex="true"
-        jar="/root/.android/build-cache/920384ad17495abeb5355a05da674f6530ab12eb/output/jars/libs/internal_impl-24.2.1.jar"
+        jar="/root/.android/build-cache/a215893778679c623275d1a6aa0afd8537786820/output/jars/classes.jar"
         jumboMode="true"
         optimize="true"
         revision="25.0.0"
-        sha1="fbf8da429efd5ad21e02e3e5ecaa1efc4167878d">
-        <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-24.2.1_e0b23572e39faf4b0282426d71df1c477465d8e4/classes.dex" />
+        sha1="7521486d9bfd2cd9e756e0cf75ed7d97f2ce2d3b">
+        <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_ec5c056e15090f27e6246f3d4e484eeafe592b0b/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/root/.android/build-cache/d649807a26b9edbcb8b40de648900e7a5c97d308/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_9c53892987db7df0bcb95674359a592a1d783e6e/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -174,21 +201,21 @@
     </item>
     <item
         is-multidex="true"
-        jar="/root/.android/build-cache/4f0e08f3d223137194b14bc3c1dfdb5bb38add09/output/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.0"
-        sha1="d5c731fc64c03dfe04d51134955b483551c35849">
-        <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_e586f765a73286dfc569c42e5f84ff0b85d4262d/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="/root/.android/build-cache/8c4dd56fff1b2347250cc8a55d24f6c48c1b6de1/output/jars/classes.jar"
         jumboMode="true"
         optimize="true"
         revision="25.0.0"
         sha1="0ad33eb600f3d80bdff5ce355c90d5533ade652a">
         <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_4aff740a250ac99ccfac81093a38fc293c731b3a/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/root/.android/build-cache/bceff09d679921081473d426f3433bf610e5118e/output/jars/libs/internal_impl-24.2.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="7e4389bd133359a2ff88623ff1e4ff93d6e6f780">
+        <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-24.2.1_e1fbccf73feb2b090a4567cc7813f3832015fa39/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -201,6 +228,15 @@
     </item>
     <item
         is-multidex="true"
+        jar="/root/.android/build-cache/c2609bc5869658ff4f75e356b1a10f6cec98f39f/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="b9a1ac78ad7ef3abedc4a4b30cd92bcacb939d1f">
+        <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_04c9a87249b39f523451478a98cc56f9ffb27558/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="/root/.android/build-cache/9419476994c8cf79e77a950bf23b7af9042d3532/output/jars/classes.jar"
         jumboMode="true"
         optimize="true"
@@ -210,21 +246,30 @@
     </item>
     <item
         is-multidex="true"
+        jar="/root/.android/build-cache/05ec29787531561a3b6889906ca24e03b29761c3/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="e03f47f3d1017a093bb3239d4ec47c3447f40744">
+        <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_2e2c0d5954c55837e9378b48212098a7d8edd67f/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/root/.android/build-cache/bceff09d679921081473d426f3433bf610e5118e/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="0ecb4b595fa0f0f8018a149ace3ea6525624f94e">
+        <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_2aae3b63ed8fddf8a3cca4ab9556595fa50009a8/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="/root/.gradle/caches/modules-2/files-2.1/com.firebase/firebase-client-jvm/2.3.1/4d53b7d6983247af02b8fe7e4228fff555a5e828/firebase-client-jvm-2.3.1.jar"
         jumboMode="true"
         optimize="true"
         revision="25.0.0"
         sha1="4d53b7d6983247af02b8fe7e4228fff555a5e828">
         <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/firebase-client-jvm-2.3.1_73b7cc892c50da3ca338c70879eddd49b03701be/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/root/.android/build-cache/604ca976581901235e51cb8fae4470e5239b9b3b/output/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.0"
-        sha1="43b2dba6b5a0b14527961b75329d0b90025f15ea">
-        <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_964fde45bdda4b6f2f1bbf08b8dca499c557c93b/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -241,35 +286,8 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.0"
-        sha1="c82741bc129dd5f99f11a4ab8666ae24262053b6">
+        sha1="510aa6efc159983dfbffa676a0dae37568c0a46f">
         <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_7010f6b3b686345cbf562f501f33299c78c92458/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/root/.android/build-cache/02927dd4ff03c8495a1568746de1a71124aa99ac/output/jars/libs/internal_impl-24.2.1.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.0"
-        sha1="5f64d657e838e8375135c0f6057a7ff8fab6a50e">
-        <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-24.2.1_35f26823d47f2ade878d9cdb14441ce03007b77e/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/root/.android/build-cache/6cec9bc4177fcf90aeb100bde89b7f6f20417e6e/output/jars/libs/internal_impl-24.2.1.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.0"
-        sha1="867dad63c33388ff8c7644b236579355036d075f">
-        <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-24.2.1_7442e22c0209ef0be491943e0f244b79197dfb9d/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/root/.android/build-cache/d5fa1e20290eb1ad051913c47e43381c4869ebad/output/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.0"
-        sha1="0ecb4b595fa0f0f8018a149ace3ea6525624f94e">
-        <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_beee9d25cf64e5381646bb37a25a636633afb645/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -279,15 +297,6 @@
         revision="24.0.1"
         sha1="3c8f6018eaa72d43b261181e801e6f8676c16ef6">
         <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/jackson-databind-2.2.2_3498aa35d6028de1d82818f1efd143ac501554a5/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/root/.android/build-cache/8a75699264f9516633082aae87106c777b136f2d/output/jars/libs/internal_impl-24.2.1.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.0"
-        sha1="935a969265b2a166b2d20415423f5f6e90fe16e0">
-        <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-24.2.1_25b62956ce19c892d2917fa3505e32cbf574c4bd/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -309,21 +318,21 @@
     </item>
     <item
         is-multidex="true"
-        jar="/root/.android/build-cache/03648810672b6957c2c778eb019c09ba18936c23/output/jars/classes.jar"
+        jar="/root/.android/build-cache/f13205e12dc37d4d6c21513a844ed7b4e6f0e2d5/output/jars/classes.jar"
         jumboMode="true"
         optimize="true"
         revision="25.0.0"
-        sha1="e03f47f3d1017a093bb3239d4ec47c3447f40744">
-        <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_ea95de9c81beff193616366b273ab13c77afba74/classes.dex" />
+        sha1="43b2dba6b5a0b14527961b75329d0b90025f15ea">
+        <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_6ad99187a50fc9f76a05e51db8063301c39fa6aa/classes.dex" />
     </item>
     <item
         is-multidex="true"
-        jar="/root/.android/build-cache/6cec9bc4177fcf90aeb100bde89b7f6f20417e6e/output/jars/classes.jar"
+        jar="/root/.android/build-cache/61478c28c6c3435c03e4bc74334467cb0f1379c1/output/jars/classes.jar"
         jumboMode="true"
         optimize="true"
         revision="25.0.0"
-        sha1="e7f3132168957eefc46229fc32c3bd464642b71e">
-        <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_50cc11060e9c50f1d836880531c7cd7a1fcb03b9/classes.dex" />
+        sha1="9c4c3bc902450c39ed54de170db4fb12aea20a35">
+        <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_5a113e2e68ee3f42839ad4786765a21ba1b0ed53/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -340,7 +349,7 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.0"
-        sha1="20973f7cd47ccff02c69f637a99d621ad5c4e74a">
+        sha1="4b228d8d3143fe54a2df125274e3ed6892f0f9d0">
         <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_267f9ddf07bd869e43d790a54207644340d1dece/classes.dex" />
     </item>
     <item
@@ -351,15 +360,6 @@
         revision="25.0.0"
         sha1="18b5697c65c4fe5b7381613b8b8ae9ac52e26fa7">
         <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_33a713b7c4ab56930256ff00ea1ae98d1ee3a0ca/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/root/.android/build-cache/d5fa1e20290eb1ad051913c47e43381c4869ebad/output/jars/libs/internal_impl-24.2.1.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.0"
-        sha1="7e4389bd133359a2ff88623ff1e4ff93d6e6f780">
-        <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-24.2.1_b2b4f7151f90e081beb6195d0daaa258c66c6aea/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -381,21 +381,12 @@
     </item>
     <item
         is-multidex="true"
-        jar="/root/.android/build-cache/920384ad17495abeb5355a05da674f6530ab12eb/output/jars/classes.jar"
+        jar="/root/.android/build-cache/c2609bc5869658ff4f75e356b1a10f6cec98f39f/output/jars/libs/internal_impl-24.2.1.jar"
         jumboMode="true"
         optimize="true"
         revision="25.0.0"
-        sha1="09b462bbcb77650284bd6614f1a32f360ef369f8">
-        <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_7202fcabeee3eaf4c653c40fa870f422511acc33/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/root/.android/build-cache/02927dd4ff03c8495a1568746de1a71124aa99ac/output/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.0"
-        sha1="b9a1ac78ad7ef3abedc4a4b30cd92bcacb939d1f">
-        <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_635e47580c22a8fcea5a3524882413efcce0d97e/classes.dex" />
+        sha1="5f64d657e838e8375135c0f6057a7ff8fab6a50e">
+        <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-24.2.1_ba8caf34248f2b94efe2f120b524cfbba31d019d/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -405,6 +396,15 @@
         revision="25.0.0"
         sha1="b15f898c9047f9d612a63000126b485dd024eaac">
         <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_3f6ee4de60ecb402b6ccc59b83b692672f860550/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/root/.android/build-cache/6584bd6bfc94cd6ac34a004e70861416adc0aac0/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="e7f3132168957eefc46229fc32c3bd464642b71e">
+        <dex dex="/home/emulk/AndroidStudioProjects/BeaconDetector/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_d007dfa00f73fae3fd2474b2e44d211bfdb71145/classes.dex" />
     </item>
     <item
         is-multidex="true"

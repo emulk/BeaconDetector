@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.altbeacon.beacon.Beacon;
@@ -28,6 +29,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -48,6 +50,7 @@ public class TargetedAD extends Activity implements BeaconConsumer, RangeNotifie
     private TextView femaleSold;
     private TextView happySold;
     private TextView sadSold;
+    private ImageView sconto;
     private ProgressDialog pd;
     private EditText text;
 
@@ -73,17 +76,8 @@ public class TargetedAD extends Activity implements BeaconConsumer, RangeNotifie
     private String lastTimeStamp = "0";
 
     private List<Expressivity> bayesClassifier = new ArrayList();
-    //lista finale con i valori medi
-    List<Expressivity> finalList = new ArrayList<>();
-
-    //lista attuale con i valori medi
-    List<Expressivity> actualExpresionList = new ArrayList<>();
-
-
-    private boolean firstExecution = true;
 
     //probabilità
-
     private double totMale = 0;
 
     private double probSold = 0;
@@ -92,11 +86,19 @@ public class TargetedAD extends Activity implements BeaconConsumer, RangeNotifie
     private double probHappSold = 0;
     private double probSadSold = 0;
 
+    private double probOfferta1 = 0;
+    private double probOfferta2 = 0;
+    private double probOfferta3 = 0;
 
-    private double actualProbSold = 0;
-    private double actualProbMaleSold = 0;
-    private double actualProbHappSold = 0;
-    private double actualProbSadSold = 0;
+
+    private double offerta1 = 0;
+    private double offerta2 = 0;
+    private double offerta3 = 0;
+
+    private double offerta1Sold = 0;
+    private double offerta2Sold = 0;
+    private double offerta3Sold = 0;
+
 
     private int totRecords = 0;
 
@@ -115,14 +117,7 @@ public class TargetedAD extends Activity implements BeaconConsumer, RangeNotifie
         femaleSold = (TextView) findViewById(R.id.femaleSold);
         happySold = (TextView) findViewById(R.id.happySold);
         sadSold = (TextView) findViewById(R.id.sadSold);
-
-        //se sono a due metri dal beacon posso processare i dati
-        /* new Timer().scheduleAtFixedRate(new TimerTask() {
-        @Override
-        public void run() {
-            new JsonTask().execute(text.getText().toString());
-        }
-        }, 0, 1000);*/
+        sconto = (ImageView) findViewById(R.id.percentOff);
 
         btnHit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -202,6 +197,7 @@ public class TargetedAD extends Activity implements BeaconConsumer, RangeNotifie
 
                 distance = beacon.getDistance();
                 if (distance <= 1.5) {
+                    //lo faccio eseguire sul thread che ha creato l'ui
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -209,8 +205,7 @@ public class TargetedAD extends Activity implements BeaconConsumer, RangeNotifie
 
                             if (update) {
                                 printProbValue();
-                                //lo faccio eseguire sul thread che ha creato l'ui
-                                //txtJson.setText(buffer.toString());
+
                             }
                             try {
                                 synchronized (this) {
@@ -218,6 +213,7 @@ public class TargetedAD extends Activity implements BeaconConsumer, RangeNotifie
                                 }
                             } catch (Exception e) {
                                 //catch exception
+                                e.printStackTrace();
                             }
                         }
                     });
@@ -233,6 +229,7 @@ public class TargetedAD extends Activity implements BeaconConsumer, RangeNotifie
 
                 distance = beacon.getDistance();
                 if (distance <= 1.5) {
+                    //lo faccio eseguire sul thread che ha creato l'ui
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -240,15 +237,14 @@ public class TargetedAD extends Activity implements BeaconConsumer, RangeNotifie
 
                             if (update) {
                                 printProbValue();
-                                //lo faccio eseguire sul thread che ha creato l'ui
-                                //txtJson.setText(buffer.toString());
                             }
                             try {
                                 synchronized (this) {
-                                    wait(10 * 1000);
+                                    wait(5 * 1000);
                                 }
                             } catch (Exception e) {
                                 //catch exception
+                                e.printStackTrace();
                             }
                         }
                     });
@@ -263,20 +259,42 @@ public class TargetedAD extends Activity implements BeaconConsumer, RangeNotifie
      */
     public void printProbValue() {
 
+        //probabilità che compri con l'offerta uno
+        probOfferta1 = (offerta1Sold / offerta1) * (offerta1 / totRecords) / (probSold / totRecords);
+        //probabilità che compri con l'offerta due
+        probOfferta2 = (offerta2Sold / offerta2) * (offerta2 / totRecords) / (probSold / totRecords);
+        //probabilità che compri con l'offerta tre
+        probOfferta3 = (offerta3Sold / offerta3) * (offerta3 / totRecords) / (probSold / totRecords);
+
+        double probMaleSoldOffer = ((probMaleSold / totMale) * (totMale / totRecords) / (probSold / totRecords));
+
+        //&& probMaleSoldOffer < 0.8
+        if (probOfferta1 > probOfferta2 && probOfferta1 > probOfferta3 && probMaleSoldOffer < 0.9) {
+            //offerta1
+            sconto.setImageResource(R.mipmap.dieci);
+        } else if (probOfferta2 > probOfferta3 && probOfferta2 > probOfferta1 && probMaleSoldOffer < 0.9) {
+            //offerta 2
+            sconto.setImageResource(R.mipmap.venti);
+        } else if (probOfferta3 > probOfferta1 && probOfferta3 > probOfferta2 && probMaleSoldOffer < 0.9) {
+            //offerta 3
+            sconto.setImageResource(R.mipmap.trenta);
+        }
+
+
         probFemaleSold = (1 - probMaleSold / totRecords);
 
-        sold.setText("Probabilità di vendita: " + probSold / totRecords);
+        sold.setText("Probabilità di vendita: " + new DecimalFormat("##.##").format(probSold / totRecords));
 
         //la probabilita che un maschio compri
 
         //maleSold.setText("Probabilità che un maschio compri: " + (probMaleSold / totRecords) * (probSold / totRecords));
-        maleSold.setText("Probabilità che un maschio compri: " + ((probMaleSold / totMale) * (totMale / totRecords) / (probSold / totRecords)));
+        maleSold.setText("Probabilità che un maschio compri: " + new DecimalFormat("##.##").format(probMaleSoldOffer));
 
-        femaleSold.setText("Probabilità che una feminna compri: " + probFemaleSold * (probSold / totRecords));
+        femaleSold.setText("Probabilità che una feminna compri: " + new DecimalFormat("##.##").format(probFemaleSold * (probSold / totRecords)));
 
-        happySold.setText("Probabilità che una persona felice compri: " + (probHappSold / totRecords) * (probSold / totRecords));
+        happySold.setText("Probabilità che una persona felice compri: " + new DecimalFormat("##.##").format((probHappSold / totRecords) * (probSold / totRecords)));
 
-        sadSold.setText("Probabilità che una persona triste compri: " + (probSadSold / totRecords) * (probSold / totRecords));
+        sadSold.setText("Probabilità che una persona triste compri: " + new DecimalFormat("##.##").format((probSadSold / totRecords) * (probSold / totRecords)));
 
     }
 
@@ -334,7 +352,7 @@ public class TargetedAD extends Activity implements BeaconConsumer, RangeNotifie
 
                 JSONObject jsonObject = new JSONObject(buffer.toString());
                 JSONArray expressions = jsonObject.getJSONArray("records");
-                if (expressions.length() > 0 ) {
+                if (expressions.length() > 0) {
                     numRecords = expressions.length();
                     update = true;
 
@@ -360,7 +378,7 @@ public class TargetedAD extends Activity implements BeaconConsumer, RangeNotifie
                         exp.setSadness(Integer.parseInt(expression.getString("sadness")));
                         exp.setPositive(Integer.parseInt(expression.getString("positive")));
                         exp.setExpression(Integer.parseInt(expression.getString("expression")));
-                        exp.setOffer(randInt(0,6));
+                        exp.setOffer(randInt(0, 3));
                         exp.setSold(randInt(0, 1));
                         lastTimeStamp = expression.getString("timeStamp");
                         //prendo in considerazione il record
@@ -391,6 +409,27 @@ public class TargetedAD extends Activity implements BeaconConsumer, RangeNotifie
                             totMale++;
                             if (bayesClassifier.get(i).getSold() == 1) {
                                 probMaleSold++;
+                            }
+                        }
+
+                        if (bayesClassifier.get(i).getOffer() == 1) {
+                            offerta1++;
+                            if (bayesClassifier.get(i).getSold() == 1) {
+                                offerta1Sold++;
+                            }
+                        }
+
+                        if (bayesClassifier.get(i).getOffer() == 2) {
+                            offerta2++;
+                            if (bayesClassifier.get(i).getSold() == 1) {
+                                offerta2Sold++;
+                            }
+                        }
+
+                        if (bayesClassifier.get(i).getOffer() == 3) {
+                            offerta3++;
+                            if (bayesClassifier.get(i).getSold() == 1) {
+                                offerta3Sold++;
                             }
                         }
 

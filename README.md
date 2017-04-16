@@ -1,27 +1,57 @@
-# BeaconDetector
+## BeaconDetector
+### Description
+BeaconDetector is an android application how detect the bluetooth low energy broadcasted signal.
+BeaconDetctor recognize the iBeacon protocol and Eddyston beacon protocol
+The application show the uuid of the beacon,
+The major/minor number
+The distance in mether from the beacon
+The Rssi and TxPower signal
+<br/>
 
-Si tratta di un applicazione android che legge il segnale broadcastato dai Beacon che implementano il protocollo Eddystone e iBeacon.
-L'applicazione indica l'uuid del beacon,sia Eddystone che iBeacon,
-l'istanza o il Major/minor,
-la distanza dal beacon in metri,
-il segnale Rssi e il TxPower.
+Eddystone è un protocollo open source, iniziato da Google nel 2015, è simile al protocollo IBeacon ma con più opzioni.
 
 
-Eddystone è un protocollo open source, lanciato da google nel 2015, è simile al protocollo iBeacon di Apple ma con numerossi opzioni in più.
+[If you want to  know more on BLE or iBeacon and Eddyston protocol read here: ](http://www.slideshare.net/orgestshehaj/beacons-63756145) <br/>
 
-In particolare il protocollo Eddyston è in grado di inviare quatro tipi di segnali:
 
-[Per saperne di più sul BLE, oppure sui protocolli iBeacon ed Eddyston leggi: ](http://www.slideshare.net/orgestshehaj/beacons-63756145)
-[Per scarica l'app dal google play: ](https://play.google.com/store/apps/details?id=beacondetector.emulk.it.beacondetector)
+[Android App available on Google Play: ](https://play.google.com/store/apps/details?id=beacondetector.emulk.it.beacondetector)
+
 
 ##UID
-Si tratta di un id univoco
+Is an univoc Id
 
 ##URL
-E' un URL compressa, e una volta decompressa ti reindiriza sul sito web
+Is a compres URL, and the url redirect on a website
 
 ##TLM
+Sho different details lik: batery levell or ather sensor innside the beacon
 Ti invia i dettagli della batteria o altri sensori contenuti nel beacon, deve essere associato ad un UID o EID
 
 ##EID
-E' un UID criptato, che cambia pseudo casualmente nel tempo. 
+Encrypted Id, the id changes pseudo random, and is recognized only by them who have the permissions
+
+## iBeacon Emitter
+If you don't have any beacon and you have a linux OS, like Ubuntu , you can use this python script <br/>
+
+[iBeaconEmitter](https://github.com/emulk?tab=repositories) <br/>
+
+This Scirpt simulate an iBeacon device.
+If you dont have a Linux Os you can use a virtual machine.
+
+## Bugs
+
+Please report bugs and feature requests to the email: orgest.shehaj@gmail.com <br/>
+
+## Author
+
+**Orgest Shehaj**
+
+
++ [https://www.facebook.com/oshehaj1)
+
+## Copyright and license
+
+Copyright 2017 Orgest Shehaj.
+
+
+
