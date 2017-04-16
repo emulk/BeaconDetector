@@ -17,6 +17,14 @@ Eddystone è un protocollo open source, iniziato da Google nel 2015, è simile a
 [Android App available on Google Play: ](https://play.google.com/store/apps/details?id=beacondetector.emulk.it.beacondetector)
 
 
+### Screens
+
+[![Sample demo](https://lh3.googleusercontent.com/YXwHMDqWGjZJeNYavzMBOpeBQLoWHNXLSJfIFblV87B6ymogwXwuuJkGPEh06YHd7jcE=h900)](https://lh3.googleusercontent.com/YXwHMDqWGjZJeNYavzMBOpeBQLoWHNXLSJfIFblV87B6ymogwXwuuJkGPEh06YHd7jcE=h900)
+
+
+[![Sample demo](https://lh3.googleusercontent.com/HwM7LRTi7z-eaeK3OeBa5BHHPjqZnRYWB-MGpobeM-bQjZRxKXTYrUjdyAsWZeDC-sc=h900)](https://lh3.googleusercontent.com/HwM7LRTi7z-eaeK3OeBa5BHHPjqZnRYWB-MGpobeM-bQjZRxKXTYrUjdyAsWZeDC-sc=h900)
+
+
 ##UID
 Is an univoc Id
 
@@ -47,7 +55,7 @@ Please report bugs and feature requests to the email: orgest.shehaj@gmail.com <b
 **Orgest Shehaj**
 
 
-+ [https://www.facebook.com/oshehaj1)
++ [Contact me on Facebook](https://www.facebook.com/oshehaj1)
 
 ## Copyright and license
 
