@@ -41,7 +41,7 @@ Encrypted Id, the id changes pseudo random, and is recognized only by them who h
 ## iBeacon Emitter
 If you don't have any beacon and you have a linux OS, like Ubuntu , you can use this python script <br/>
 
-[iBeaconEmitter](https://github.com/emulk?tab=repositories) <br/>
+[iBeaconEmitter](https://github.com/emulk/iBeaconEmitter) <br/>
 
 This Scirpt simulate an iBeacon device.
 If you dont have a Linux Os you can use a virtual machine.
